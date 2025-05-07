@@ -101,7 +101,7 @@ function Register() {
     <>
       <div className="register">
         <div className="container">
-          <Link className="back-home link">
+          <Link className="back-home link" to="/">
             <ArrowLeft />
             Back Home
           </Link>

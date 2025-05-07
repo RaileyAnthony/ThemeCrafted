@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import "./Login.scss";
 import newRequest from "../../utils/newRequest";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { logo } from "../../assets"
+import { ArrowLeft } from "lucide-react";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -22,27 +25,68 @@ function Login() {
   };
 
   return (
-    <div className="login">
-      <form onSubmit={handleSubmit}>
-        <h1>Sign in</h1>
-        <label htmlFor="">Username</label>
-        <input
-          name="username"
-          type="text"
-          placeholder="johndoe"
-          onChange={(e) => setUsername(e.target.value)}
-        />
+    <>
+      <div className="login">
+        <Link className="back-home link" to="/">
+          <ArrowLeft /> Back Home
+        </Link>
 
-        <label htmlFor="">Password</label>
-        <input
-          name="password"
-          type="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Login</button>
-        {error && error}
-      </form>
-    </div>
+        <div className="grid-bg"></div>
+        <div className="top-glow"></div>
+
+        <Link className="link logo-link" to="/">
+          <img src={logo} alt=""className='logo'/>
+          <span className='logo-text'>ThemeCrafted</span>
+        </Link>
+
+        <div className="modal">
+          <div className="title-desc">
+            <h2>Welcome back!</h2>
+            <p>Log in to access your purchases, and explore exclusive themes and content</p>
+          </div>
+
+          <form onSubmit={handleSubmit}>
+            {/* USERNAME */}
+            <div className='input-group email'>
+              <label>Username</label>
+              <input
+                name="username"
+                type="text"
+                placeholder="Enter your username"
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+
+            {/* PASSWORD */}
+            <div className='input-group password'>
+              <label>Password</label>
+              <input
+                name="password"
+                type="password"
+                placeholder="Enter your password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+
+            <div className="btns">
+              <button className='primary-btn' type="submit">Log In</button>
+
+              <Link className="switch-link link" to="/register">
+                Don't have an account?{" "}
+                <span>
+                  Sign Up!
+                </span>
+              </Link>
+            </div>        
+          </form>
+
+        </div>
+
+        <div className="terms-conditions">
+          <p>© 2025 ThemeCrafted, All Rights Reserved</p>
+        </div>
+      </div>
+    </>
   );
 }
 
