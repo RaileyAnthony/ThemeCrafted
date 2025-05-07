@@ -1,0 +1,186 @@
+@use "sass:math";
+
+.cta {
+  position: relative;
+  background-color: rgba(var(--black-color));
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .grid-bg {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-size: 70px 70px;
+    background-image: linear-gradient(to right, rgba(var(--gray-color)) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(var(--gray-color)) 1px, transparent 1px);
+
+    .grid-overlay {
+      pointer-events: none;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(var(--black-color));
+      mask-image: radial-gradient(circle at center -50%, rgba(0,0,0,0.2) 25%, black 85%);
+    }
+
+    .light {
+      position: absolute;
+      width: 2000px;
+      top: -110%;
+      right: -30%;
+      filter: blur(35px);
+    }
+
+    .particles {
+      position: absolute; // you can move this wherever
+      top: 0;
+      right: 0;
+      width: 50%;
+      height: 100%;
+      pointer-events: none;
+  
+      span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        background: white;
+        border-radius: 100%;
+        opacity: 0.6;
+    
+        // Generate multiple particles with random position and animation delay
+        @for $i from 1 through 100 {
+          &:nth-child(#{$i}) {
+            left: math.random() * 100%;
+            top: math.random() * 100%;
+          }
+        }
+      }
+    }
+  
+  
+    
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1280px;
+      width: 100%;
+      padding: 120px 16px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+
+      @media (max-width: 1025px) {
+        padding: 80px 16px;
+        flex-direction: column;
+        gap: 30px;
+      }
+      
+      .left-side {
+        flex: 1;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;  
+
+        @media (max-width: 1025px) {
+          flex: none;
+          width: 100%;
+        }
+
+        .device-mockup {
+          position: relative;
+          z-index: 2 ;
+          margin: 0 auto;
+          img {
+            width: 100%;
+          }
+        }
+
+        .spiral {
+          position: absolute;
+          z-index: 1;
+          top: -35%;
+          right: 80px;
+          transform: rotate(45deg);
+          @media (max-width: 1025px) {
+            right: 25%;
+          }
+
+          @media (max-width: 600px) {
+            top: -30%;  
+            right: none;
+          }
+          img {
+            width: 370px;
+            height: auto;
+            @media (max-width: 600px) {
+              max-width: 300px;
+            }
+
+            @media (max-width: 480px) {
+              max-width: 220px;
+            }
+
+            @media (max-width: 320px) {
+              max-width: 180px;
+            }
+          }
+        }
+      }
+
+      .right-side {
+        flex: 1.2;
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        justify-content: center;
+        align-items: start;
+        position: relative;
+        z-index: 2;
+
+        @media (max-width: 1025px) {
+          flex: none;
+          width: 100%;
+          gap: 40px;
+        }
+
+       .title-desc {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          justify-content: start;
+          align-items: start;
+          @media (max-width: 1025px) {
+            gap: 1  0px;
+          }
+        }
+
+        h1 {
+          color: white !important;
+        }
+
+        .logo {
+          background: linear-gradient(to top, rgba(var(--primary-color)), #97de73);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-family: "LogoFont", sans-serif;
+        }
+
+        p {
+          color: rgba(var(--off-white-color));
+        }
+      }
+    }
+  }
+}

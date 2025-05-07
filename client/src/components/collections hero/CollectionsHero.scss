@@ -1,0 +1,298 @@
+.collections-hero {
+  position: relative;
+  background-color: white;
+  overflow: hidden;
+
+  .grid-bg {
+    position: relative; 
+    width: 100%;       
+    height: 100%;       
+    z-index: 0;
+    background-size: 70px 70px;
+    background-image: linear-gradient(to right, #e4e4e7 1px, transparent 1px),
+                      linear-gradient(to bottom, #e4e4e7 1px, transparent 1px);
+  }
+
+  // Styles for colored blocks
+  .colored-block {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    z-index: 1;
+    transition: opacity 0.3s ease;
+    
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  .grid-overlay {
+    pointer-events: none; 
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    mask-image: radial-gradient(ellipse at center 0%, transparent 0%, black);
+  }
+
+  .container {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: 60px;
+    padding: 220px 16px 320px 16px;
+    max-width: 1280px;
+    margin: 0 auto;
+    overflow: visible;
+
+    @media (max-width: 1025px) {
+      padding: 160px 16px 260px 16px;
+      flex-direction: column;
+    }
+
+    @media (max-width: 768px) {
+    }
+
+    .left-side {  
+      display: flex;
+      flex-direction: column;
+      justify-content: start;
+      align-items: start;
+      gap: 30px;
+      flex: 1;
+      height: 100%;
+      z-index: 4;
+
+      @media (max-width: 1025px) {
+        flex: none;
+        width: 100%;
+      }
+    
+      .title {
+        position: relative;
+      
+        h1 {
+          font-size: 4rem !important;
+          z-index: 2;
+          position: relative;
+      
+          .underline-target {
+            position: relative;
+            display: inline-block;
+          
+            .text {
+              position: relative;
+              z-index: 2; // Ensures it's above the line
+            }
+          
+            .line {
+              position: absolute;
+              bottom: -6px;
+              left: 0;
+              width: 100%;
+              height: auto;
+              z-index: 1; // Stays behind the text
+              pointer-events: none;
+              @media (max-width: 480px) {
+                display: none !important;
+              }
+            }
+          }
+          
+      
+          .pop-target{
+            position: relative;
+            display: inline-block;
+      
+            .pop {
+              position: absolute;
+              top: 35%;
+              right: -50px;
+              transform: rotate(125deg);
+              width: 40px;
+              height: auto;
+              z-index: 1;
+
+              @media (max-width: 768px) {
+                width: 25px;
+                right: -30px;
+              }
+            }
+          }
+      
+          @media (max-width: 1025px) {
+            font-size: 3rem !important;
+          }
+      
+          @media (max-width: 768px) {
+            font-size: 2.5rem !important;
+          }
+        }
+      }
+      
+      p {
+        font-size: 1.25rem !important;
+
+        @media (max-width: 1025px) {
+          font-size: 1.1rem !important;
+        }
+    
+        @media (max-width: 768px) {
+          font-size: 1rem !important;
+        }
+      }
+      
+      .slider-nav {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+
+        button {
+          width: fit-content;
+          padding: 10px 10px !important;
+          transition: opacity 0.3s ease, background-color 0.3s ease;
+          
+          &.button-disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background-color: #f0f0f0;
+            color: #a0a0a0;
+          }
+        }
+      }
+    }
+
+    .right-side {
+      flex: 1.05;
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      justify-content: center;
+      overflow: visible;
+      @media (max-width: 1025px) {
+        flex: none;
+        width: 100%;
+      }
+    
+      .hero-swiper {
+        width: 100%;
+        max-width: 270px;
+        overflow: visible;
+        height: 100%;
+        margin: 0px !important;
+        @media (max-width: 1025px) {
+          max-width: 290px;
+          height: 300px;
+        }
+        
+        .swiper-slide {
+          position: relative;
+          overflow: hidden;
+          border-radius: 10px;
+          height: 100%;
+          transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+
+        .slide-card {
+          position: relative;
+          height: 100%;
+          width: 100%;
+          overflow: hidden;
+          display: flex;
+          align-items: flex-end; // adjust as needed
+          padding: 12px;
+          color: white;
+          z-index: 1;
+
+          .text {
+            position: relative;
+            z-index: 2;
+            background-color: rgba(var(--off-white-color));
+            border-radius: 8px;
+            padding: 10px;
+          }
+
+          .slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            z-index: 1;
+            pointer-events: none;
+          }
+
+          .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            z-index: 1; 
+            pointer-events: none;
+          }
+        }
+        
+        /* Direction-specific animations */
+        .exiting-slide-down {
+          animation: fadeDown 600ms ease forwards;
+          z-index: 0;
+          pointer-events: none; /* Prevent interaction with fading slide */
+        }
+
+        .exiting-slide-up {
+          animation: fadeUp 600ms ease forwards;
+          z-index: 0;
+          pointer-events: none; /* Prevent interaction with fading slide */
+        }
+
+        .hidden-slide {
+          visibility: hidden;
+          pointer-events: none;
+          opacity: 0;
+        }
+        
+        @keyframes fadeDown {
+          0% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+          80% {
+            /* At this point (80%), the slide change will occur */
+            transform: translateY(40px);
+            opacity: 0.2;
+          }
+          100% {
+            transform: translateY(50px);
+            opacity: 0;
+          }
+        }
+
+        @keyframes fadeUp {
+          0% {
+            transform: translateY(50px);
+            opacity: 1;
+          }
+          80% {
+            /* At this point (80%), the slide change will occur */
+            transform: translateY(-0px);
+            opacity: 0.2;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 0;
+          }
+        }
+      }
+    }
+    
+  }
+}
