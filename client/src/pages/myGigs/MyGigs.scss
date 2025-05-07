@@ -5,9 +5,16 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 150px 0px 120px 0px;
+  padding: 150px 0px 40px 0px;
   position: relative;
-  color: #555;
+
+  @media (max-width: 1025px) {
+    padding: 130px 0px 30px 0px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 120px 0px 20px 0px;
+  }
 
   .loading, .error {
     margin-top: 50px;
@@ -24,6 +31,14 @@
     padding: 0 16px;
     position: relative;
     gap: 30px;
+
+    @media (max-width: 1025px) {
+      gap: 20px;
+    }
+  
+    @media (max-width: 768px) {
+      gap: 10px;
+    }
 
     .title {
       display: flex;
@@ -59,6 +74,14 @@
 
       td {
         padding: 25px;
+
+        @media (max-width: 1025px) {
+          padding: 20px;
+        }
+      
+        @media (max-width: 768px) {
+          padding: 15px;
+        }
       }
 
       td:not(:last-child) {
@@ -68,6 +91,14 @@
       th {
         padding: 10px 25px;
         text-align: left;
+
+        @media (max-width: 1025px) {
+          padding: 8px 20px;
+        }
+      
+        @media (max-width: 768px) {
+          padding: 6px 15px;
+        }
       }
 
       // IMAGE

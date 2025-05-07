@@ -1,4 +1,4 @@
-// Update your MyGigs.jsx component
+// Updated MyGigs.jsx with Loader component
 
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,6 +7,7 @@ import getCurrentUser from "../../utils/getCurrentUser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import { Trash2, Edit, Plus, ArrowUpRight } from "lucide-react";
+import Loader from "../../components/loader/Loader";
 
 function MyGigs() {
   const currentUser = getCurrentUser();
@@ -55,7 +56,7 @@ function MyGigs() {
   return (
     <div className="my-gigs">
       {isLoading ? (
-        <div className="loading">Loading...</div>
+        <Loader size="large" color="primary" />
       ) : error ? (
         <div className="error">Error: {error.message}</div>
       ) : (
