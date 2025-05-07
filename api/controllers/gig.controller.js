@@ -35,10 +35,9 @@ export const deleteGig = async (req, res, next) => {
 export const updateGig = async (req, res, next) => {
   try {
     const gig = await Gig.findById(req.params.id);
-    
-    if (!gig) 
-      return next(createError(404, "Gig not found!"));
-      
+
+    if (!gig) return next(createError(404, "Gig not found!"));
+
     if (gig.userId !== req.userId)
       return next(createError(403, "You can update only your gig!"));
 
@@ -47,7 +46,7 @@ export const updateGig = async (req, res, next) => {
       { $set: req.body },
       { new: true }
     );
-    
+
     res.status(200).json(updatedGig);
   } catch (err) {
     next(err);
