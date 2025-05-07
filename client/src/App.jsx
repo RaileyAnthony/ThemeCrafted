@@ -19,25 +19,42 @@ import Collections from "./pages/collections/Collections";
 import {
   QueryClient,
   QueryClientProvider,
-  useQuery,
 } from "@tanstack/react-query";
 
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Make sure this is imported
 
-import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-router-dom";
 import Pay from "./pages/pay/Pay.jsx";
 import Success from "./pages/Success/Success.jsx";
 
 function App() {
   const queryClient = new QueryClient();
+  
   const Layout = () => {
+    const location = useLocation();
+    const hideNavbarRoutes = ["/login", "/register"];
+    const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+
+    const hideFooterRoutes = ["/login", "/register"];
+    const shouldHideFooter = hideNavbarRoutes.includes(location.pathname);
+
     return (
       <div className="app">
-        <QueryClientProvider client={queryClient}>
-          <Navbar />
-          <Outlet />
-          <Footer />
-        </QueryClientProvider>
+        {!shouldHideNavbar && <Navbar />}
+        <Outlet />
+        {!shouldHideFooter && <Footer />}
+        <ToastContainer 
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </div>
     );
   };
@@ -45,7 +62,11 @@ function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Layout />,
+      element: (
+        <QueryClientProvider client={queryClient}>
+          <Layout />
+        </QueryClientProvider>
+      ),
       children: [
         {
           path: "/",
@@ -103,12 +124,7 @@ function App() {
     },
   ]);
 
-  return (
-    <div>
-      <RouterProvider router={router} />
-      <ToastContainer></ToastContainer>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
