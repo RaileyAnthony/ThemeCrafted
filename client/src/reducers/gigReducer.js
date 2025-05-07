@@ -1,8 +1,8 @@
 export const INITIAL_STATE = {
-  userId: JSON.parse(localStorage.getItem("currentUser"))?._id,
   title: "",
   cat: "",
   cover: "",
+  phoneImage: "", // Added new field for phone image
   images: [],
   desc: "",
   shortTitle: "",
@@ -25,6 +25,7 @@ export const gigReducer = (state, action) => {
         ...state,
         cover: action.payload.cover,
         images: action.payload.images,
+        phoneImage: action.payload.phoneImage || state.phoneImage, // Handle the new phoneImage
       };
     case "ADD_FEATURE":
       return {
@@ -38,10 +39,8 @@ export const gigReducer = (state, action) => {
           (feature) => feature !== action.payload
         ),
       };
-    // ADD THIS NEW CASE
     case "INIT_EDIT_GIG":
       return {
-        ...state,
         ...action.payload,
       };
     default:

@@ -1,4 +1,4 @@
-/* Updated Add.scss with Register's dropzone styles */
+/* Enhanced Add.scss with required field indicators */
 
 .add {
   display: flex;
@@ -49,6 +49,12 @@
           display: flex;
           flex-direction: column;
           gap: 8px;
+          position: relative;
+
+          /* Make the additional images span full width */
+          &.wide-group {
+            width: 100%;
+          }
         }
 
         /* Input styles */
@@ -60,9 +66,20 @@
           border: 1px solid rgba(var(--gray-color), 0.3);
           padding: 12px 16px;
           background-color: rgba(var(--off-white-color), 0.2);
+          transition: border 0.2s ease;
           
           &::placeholder {
             color: rgba(var(--gray-color), 0.5);
+          }
+          
+          &:focus {
+            border: 1px solid rgba(var(--primary-color), 0.5);
+            box-shadow: 0 0 0 3px rgba(var(--primary-color), 0.1);
+          }
+          
+          &.error {
+            border-color: rgb(220, 53, 69);
+            background-color: rgba(220, 53, 69, 0.05);
           }
         }
 
@@ -80,9 +97,11 @@
           width: 100%;
           justify-content: center;
           align-items: end;
+          margin-bottom: 20px;
 
           @media (max-width: 768px) {
             flex-direction: column;
+            margin-bottom: 0;
           }
 
           .input-group {
@@ -90,6 +109,7 @@
             @media (max-width: 768px) {
               flex:none;
               width: 100%;
+              margin-bottom: 20px;
             }
           }
 
@@ -223,6 +243,7 @@
             .image-item {
               width: 60px;
               height: 60px;
+              position: relative;
               
               img {
                 width: 100%;
@@ -254,28 +275,8 @@
           flex-wrap: wrap;
           gap: 10px;
           margin-top: 5px;
-
-          .item button {
-            height: auto;
-            font-size: 14px;
-            font-weight: 400;
-            background: transparent;
-            border-radius: 10px;
-            border: 1px solid rgba(var(--gray-color), 0.3);
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.2s ease;
-            
-            span {
-              font-size: 12px;
-              font-weight: bold;
-              margin-left: 5px;
-            }
-          }
         }
-        
+    
       }
     }
   }

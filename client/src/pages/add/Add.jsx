@@ -6,6 +6,7 @@ import upload from "../../utils/upload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import Loader from "../../components/Loader/Loader";
+import { toast } from "react-toastify";
 
 const Add = () => {
   const location = useLocation();
@@ -15,6 +16,9 @@ const Add = () => {
   const [singleFileName, setSingleFileName] = useState("");
   const [files, setFiles] = useState([]);
   const [fileNames, setFileNames] = useState([]);
+  // Add new states for phone image
+  const [phoneFile, setPhoneFile] = useState(undefined);
+  const [phoneFileName, setPhoneFileName] = useState("");
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -47,24 +51,66 @@ const Add = () => {
   
   const handleFeature = (e) => {
     e.preventDefault();
+    const feature = e.target[0].value.trim();
+
+    if (!feature) {
+      toast.warning("Please enter a feature first");
+      return;
+    }
+
+    if (state.features.includes(feature)) {
+      toast.info("This feature already exists");
+      return;
+    }
+
     dispatch({
       type: "ADD_FEATURE",
-      payload: e.target[0].value,
+      payload: feature,
     });
     e.target[0].value = "";
+    
+    toast.success("Feature added successfully");
   };
 
   const handleCoverChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Basic validation for image type
+      if (!file.type.includes("image/")) {
+        toast.error("Please upload an image file");
+        return;
+      }
+      
       setSingleFile(file);
       setSingleFileName(file.name);
+    }
+  };
+
+  // Add handler for phone image change
+  const handlePhoneImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Basic validation for image type
+      if (!file.type.includes("image/")) {
+        toast.error("Please upload an image file");
+        return;
+      }
+      
+      setPhoneFile(file);
+      setPhoneFileName(file.name);
     }
   };
 
   const handleImagesChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     if (selectedFiles.length > 0) {
+      // Validate that all files are images
+      const nonImageFiles = selectedFiles.filter(file => !file.type.includes("image/"));
+      if (nonImageFiles.length > 0) {
+        toast.error("Please upload image files only");
+        return;
+      }
+      
       setFiles(selectedFiles);
       setFileNames(selectedFiles.map(file => file.name));
     }
@@ -72,11 +118,12 @@ const Add = () => {
 
   // Auto-upload function
   const handleUpload = useCallback(async () => {
-    if (!singleFile && !files.length) return;
+    if (!singleFile && !files.length && !phoneFile) return;
     
     setUploading(true);
     try {
       let cover = state.cover;
+      let phoneImage = state.phoneImage;
       let newImages = [];
       
       // Upload cover image if selected
@@ -84,39 +131,57 @@ const Add = () => {
         cover = await upload(singleFile);
         setSingleFile(undefined); // Clear file after upload
         setSingleFileName(""); // Clear file name
+        toast.success("Cover image uploaded successfully");
+      }
+      
+      // Upload phone image if selected
+      if (phoneFile) {
+        phoneImage = await upload(phoneFile);
+        setPhoneFile(undefined); // Clear file after upload
+        setPhoneFileName(""); // Clear file name
+        toast.success("Phone image uploaded successfully");
       }
 
       // Upload additional images if selected
       if (files.length > 0) {
-        newImages = await Promise.all(
-          [...files].map(async (file) => {
-            const url = await upload(file);
-            return url;
-          })
-        );
-        setFiles([]); // Clear files after upload
-        setFileNames([]); // Clear file names
+        try {
+          newImages = await Promise.all(
+            [...files].map(async (file) => {
+              const url = await upload(file);
+              return url;
+            })
+          );
+          setFiles([]); // Clear files after upload
+          setFileNames([]); // Clear file names
+          toast.success(`${newImages.length} additional images uploaded successfully`);
+        } catch (err) {
+          toast.error("Error uploading additional images");
+          console.error("Error uploading additional images:", err);
+        }
       }
       
       const images = isEditing 
         ? [...state.images, ...newImages] 
         : newImages.length > 0 ? newImages : state.images;
       
-      dispatch({ type: "ADD_IMAGES", payload: { cover, images } });
+      dispatch({ 
+        type: "ADD_IMAGES", 
+        payload: { cover, images, phoneImage } 
+      });
     } catch (err) {
       console.error("Error uploading images:", err);
-      alert("Failed to upload images. Please try again.");
+      toast.error("Failed to upload images. Please try again.");
     } finally {
       setUploading(false);
     }
-  }, [singleFile, files, state.cover, state.images, isEditing]);
+  }, [singleFile, files, phoneFile, state.cover, state.images, state.phoneImage, isEditing]);
 
   // Trigger auto upload when files change
   useEffect(() => {
-    if (singleFile || files.length > 0) {
+    if (singleFile || files.length > 0 || phoneFile) {
       handleUpload();
     }
-  }, [singleFile, files, handleUpload]);
+  }, [singleFile, files, phoneFile, handleUpload]);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -128,12 +193,13 @@ const Add = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["myGigs"]);
       setLoading(false);
+      toast.success("Gig created successfully!");
       navigate("/mygigs");
     },
     onError: (error) => {
       console.error("Error creating gig:", error);
       setLoading(false);
-      alert("Failed to create gig. Please try again.");
+      toast.error(error?.response?.data?.message || "Failed to create gig. Please try again.");
     }
   });
 
@@ -145,33 +211,54 @@ const Add = () => {
       queryClient.invalidateQueries(["myGigs"]);
       localStorage.removeItem("editGigData");
       setLoading(false);
+      toast.success("Gig updated successfully!");
       navigate("/mygigs");
     },
     onError: (error) => {
       console.error("Error updating gig:", error);
       setLoading(false);
-      alert("Failed to update gig. Please try again.");
+      toast.error(error?.response?.data?.message || "Failed to update gig. Please try again.");
     }
   });
 
+  const validateForm = () => {
+    const missingFields = [];
+    
+    if (!state.title) missingFields.push("Title");
+    if (!state.desc) missingFields.push("Description");
+    if (!state.cat) missingFields.push("Category");
+    if (!state.cover) missingFields.push("Cover Image");
+    if (!state.images.length) missingFields.push("Additional Images");
+    if (!state.shortTitle) missingFields.push("Service Title");
+    if (!state.shortDesc) missingFields.push("Short Description");
+    if (!state.deliveryTime) missingFields.push("Delivery Time");
+    if (!state.revisionNumber) missingFields.push("Revision Number");
+    if (!state.price) missingFields.push("Price");
+    
+    return missingFields;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
     
-    if (
-      !state.title ||
-      !state.desc ||
-      !state.cat ||
-      !state.cover ||
-      state.images.length === 0
-    ) {
-      alert(
-        "Please fill in all fields and upload a cover image and additional images before submitting."
+    const missingFields = validateForm();
+    
+    if (missingFields.length > 0) {
+      toast.error(
+        <div>
+          <p>Please fill in the following required fields:</p>
+          <ul style={{ marginLeft: "20px", marginTop: "8px" }}>
+            {missingFields.map((field) => (
+              <li key={field}>{field}</li>
+            ))}
+          </ul>
+        </div>
       );
-      setLoading(false);
       return;
     }
-
+    
+    setLoading(true);
+    
     if (isEditing && gigId) {
       updateMutation.mutate({ id: gigId, gig: state });
     } else {
@@ -254,8 +341,46 @@ const Add = () => {
                 </div>
               </div>
               
-              {/* ADDITIONAL IMAGES */}
+              {/* PHONE IMAGE - New section */}
               <div className="input-group">
+                <label htmlFor="phone-image">Phone Image</label>
+                {state.phoneImage && (
+                  <div className="existing-image">
+                    <img 
+                      src={state.phoneImage} 
+                      alt="Current phone view" 
+                    />
+                    <p>Current phone image</p>
+                  </div>
+                )}
+                <div className={`file-dropzone ${phoneFileName ? 'has-file' : ''} ${uploading && phoneFile ? 'uploading' : ''}`}>
+                  <div className="upload-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                  </div>
+                  <div className="upload-text">
+                    {uploading && phoneFile ? "Uploading..." : (phoneFileName ? phoneFileName : "Select phone image")}
+                  </div>
+                  <div className="upload-subtext">
+                    {!phoneFileName && !uploading && "or drag and drop it here"}
+                  </div>
+                  <input
+                    type="file"
+                    id="phone-image"
+                    onChange={handlePhoneImageChange}
+                    disabled={uploading}
+                    accept="image/*"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="upload-container">
+              {/* ADDITIONAL IMAGES */}
+              <div className="input-group wide-group">
                 <label htmlFor="additional-images">Additional Images</label>
                 {state.images && state.images.length > 0 && (
                   <div className="existing-images">
@@ -292,7 +417,6 @@ const Add = () => {
               </div>
             </div>
 
-            
             <div className="input-group">
               <label htmlFor="desc">Description</label>
               <textarea
@@ -369,9 +493,10 @@ const Add = () => {
                 {state?.features?.map((f) => (
                   <div className="item" key={f}>
                     <button
-                      onClick={() =>
-                        dispatch({ type: "REMOVE_FEATURE", payload: f })
-                      }
+                      onClick={() => {
+                        dispatch({ type: "REMOVE_FEATURE", payload: f });
+                        toast.info("Feature removed");
+                      }}
                     >
                       {f}
                       <span>×</span>

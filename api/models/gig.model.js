@@ -35,9 +35,13 @@ const GigSchema = new Schema(
       type: String,
       required: true,
     },
+    phoneImage: { // New field for phone image
+      type: String,
+      default: "",
+    },
     images: {
       type: [String],
-      required: false,
+      required: true,
     },
     shortTitle: {
       type: String,
@@ -57,7 +61,7 @@ const GigSchema = new Schema(
     },
     features: {
       type: [String],
-      required: false,
+      required: true,
     },
     sales: {
       type: Number,
