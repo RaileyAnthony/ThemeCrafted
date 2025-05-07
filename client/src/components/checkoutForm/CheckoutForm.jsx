@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./CheckoutForm.scss";
 import {
   PaymentElement,
   LinkAuthenticationElement,
@@ -15,17 +16,13 @@ const CheckoutForm = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!stripe) {
-      return;
-    }
+    if (!stripe) return;
 
     const clientSecret = new URLSearchParams(window.location.search).get(
       "payment_intent_client_secret"
     );
 
-    if (!clientSecret) {
-      return;
-    }
+    if (!clientSecret) return;
 
     stripe.retrievePaymentIntent(clientSecret).then(({ paymentIntent }) => {
       switch (paymentIntent.status) {
@@ -40,7 +37,6 @@ const CheckoutForm = () => {
           break;
         default:
           setMessage("Something went wrong.");
-          break;
       }
     });
   }, [stripe]);
@@ -48,27 +44,17 @@ const CheckoutForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!stripe || !elements) {
-      // Stripe.js has not yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
-      return;
-    }
+    if (!stripe || !elements) return;
 
     setIsLoading(true);
 
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
         return_url: "http://localhost:5173/success",
       },
     });
 
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
     if (error.type === "card_error" || error.type === "validation_error") {
       setMessage(error.message);
     } else {
@@ -83,19 +69,36 @@ const CheckoutForm = () => {
   };
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <LinkAuthenticationElement
-        id="link-authentication-element"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-        </span>
+    <form className="checkout-form" onSubmit={handleSubmit}>
+      <div className="checkout-form__group">
+        <label
+          htmlFor="link-authentication-element"
+          className="checkout-form__label"
+        >
+          Billing Information
+        </label>
+        <LinkAuthenticationElement
+          id="link-authentication-element"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+
+      <div className="checkout-form__group">
+        <label htmlFor="payment-element" className="checkout-form__label">
+          Payment Details
+        </label>
+        <PaymentElement id="payment-element" options={paymentElementOptions} />
+      </div>
+
+      <button
+        type="submit"
+        className="checkout-form__button"
+        disabled={isLoading || !stripe || !elements}
+      >
+        {isLoading ? <div className="checkout-form__spinner" /> : "Place Order"}
       </button>
-      {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+
+      {message && <div className="checkout-form__message">{message}</div>}
     </form>
   );
 };

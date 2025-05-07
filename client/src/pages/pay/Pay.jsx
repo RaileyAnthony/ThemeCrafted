@@ -12,7 +12,6 @@ const stripePromise = loadStripe(
 
 const Pay = () => {
   const [clientSecret, setClientSecret] = useState("");
-
   const { id } = useParams();
 
   useEffect(() => {
@@ -23,15 +22,17 @@ const Pay = () => {
         );
         setClientSecret(res.data.clientSecret);
       } catch (err) {
-        console.log(err);
+        console.error("Payment Intent Error:", err);
       }
     };
-    makeRequest();
-  }, []);
+
+    if (id) makeRequest();
+  }, [id]); // added 'id' as dependency
 
   const appearance = {
     theme: "stripe",
   };
+
   const options = {
     clientSecret,
     appearance,

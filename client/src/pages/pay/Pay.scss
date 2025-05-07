@@ -1,3 +1,10 @@
 .pay {
-  margin-top: 160px;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 440px;
+  margin: 160px auto;
+  padding: 1rem;
+  box-sizing: border-box;
+  background: white;
 }
