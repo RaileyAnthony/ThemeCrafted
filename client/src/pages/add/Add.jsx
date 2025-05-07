@@ -14,8 +14,6 @@ const Add = () => {
   
   const [singleFile, setSingleFile] = useState(undefined);
   const [singleFileName, setSingleFileName] = useState("");
-  const [files, setFiles] = useState([]);
-  const [fileNames, setFileNames] = useState([]);
   // Add new states for phone image
   const [phoneFile, setPhoneFile] = useState(undefined);
   const [phoneFileName, setPhoneFileName] = useState("");
@@ -101,30 +99,14 @@ const Add = () => {
     }
   };
 
-  const handleImagesChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    if (selectedFiles.length > 0) {
-      // Validate that all files are images
-      const nonImageFiles = selectedFiles.filter(file => !file.type.includes("image/"));
-      if (nonImageFiles.length > 0) {
-        toast.error("Please upload image files only");
-        return;
-      }
-      
-      setFiles(selectedFiles);
-      setFileNames(selectedFiles.map(file => file.name));
-    }
-  };
-
   // Auto-upload function
   const handleUpload = useCallback(async () => {
-    if (!singleFile && !files.length && !phoneFile) return;
+    if (!singleFile && !phoneFile) return;
     
     setUploading(true);
     try {
       let cover = state.cover;
       let phoneImage = state.phoneImage;
-      let newImages = [];
       
       // Upload cover image if selected
       if (singleFile) {
@@ -141,32 +123,10 @@ const Add = () => {
         setPhoneFileName(""); // Clear file name
         toast.success("Phone image uploaded successfully");
       }
-
-      // Upload additional images if selected
-      if (files.length > 0) {
-        try {
-          newImages = await Promise.all(
-            [...files].map(async (file) => {
-              const url = await upload(file);
-              return url;
-            })
-          );
-          setFiles([]); // Clear files after upload
-          setFileNames([]); // Clear file names
-          toast.success(`${newImages.length} additional images uploaded successfully`);
-        } catch (err) {
-          toast.error("Error uploading additional images");
-          console.error("Error uploading additional images:", err);
-        }
-      }
-      
-      const images = isEditing 
-        ? [...state.images, ...newImages] 
-        : newImages.length > 0 ? newImages : state.images;
       
       dispatch({ 
         type: "ADD_IMAGES", 
-        payload: { cover, images, phoneImage } 
+        payload: { cover, images: state.images, phoneImage } 
       });
     } catch (err) {
       console.error("Error uploading images:", err);
@@ -174,14 +134,14 @@ const Add = () => {
     } finally {
       setUploading(false);
     }
-  }, [singleFile, files, phoneFile, state.cover, state.images, state.phoneImage, isEditing]);
+  }, [singleFile, phoneFile, state.cover, state.images, state.phoneImage]);
 
   // Trigger auto upload when files change
   useEffect(() => {
-    if (singleFile || files.length > 0 || phoneFile) {
+    if (singleFile || phoneFile) {
       handleUpload();
     }
-  }, [singleFile, files, phoneFile, handleUpload]);
+  }, [singleFile, phoneFile, handleUpload]);
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -193,13 +153,13 @@ const Add = () => {
     onSuccess: () => {
       queryClient.invalidateQueries(["myGigs"]);
       setLoading(false);
-      toast.success("Gig created successfully!");
+      toast.success("Theme created successfully!");
       navigate("/mygigs");
     },
     onError: (error) => {
-      console.error("Error creating gig:", error);
+      console.error("Error creating theme:", error);
       setLoading(false);
-      toast.error(error?.response?.data?.message || "Failed to create gig. Please try again.");
+      toast.error(error?.response?.data?.message || "Failed to create theme. Please try again.");
     }
   });
 
@@ -211,13 +171,13 @@ const Add = () => {
       queryClient.invalidateQueries(["myGigs"]);
       localStorage.removeItem("editGigData");
       setLoading(false);
-      toast.success("Gig updated successfully!");
+      toast.success("Theme updated successfully!");
       navigate("/mygigs");
     },
     onError: (error) => {
-      console.error("Error updating gig:", error);
+      console.error("Error updating theme:", error);
       setLoading(false);
-      toast.error(error?.response?.data?.message || "Failed to update gig. Please try again.");
+      toast.error(error?.response?.data?.message || "Failed to update theme. Please try again.");
     }
   });
 
@@ -228,7 +188,6 @@ const Add = () => {
     if (!state.desc) missingFields.push("Description");
     if (!state.cat) missingFields.push("Category");
     if (!state.cover) missingFields.push("Cover Image");
-    if (!state.images.length) missingFields.push("Additional Images");
     if (!state.shortTitle) missingFields.push("Service Title");
     if (!state.shortDesc) missingFields.push("Short Description");
     if (!state.deliveryTime) missingFields.push("Delivery Time");
@@ -273,7 +232,7 @@ const Add = () => {
   return (
     <div className="add">
       <div className="container">
-        <h1>{isEditing ? "Edit Gig" : "Add New Gig"}</h1>
+        <h1>{isEditing ? "Edit Theme" : "Add New Theme"}</h1>
         <div className="sections">
           <div className="info">
             <div className="input-group">
@@ -283,7 +242,7 @@ const Add = () => {
                 id="title"
                 name="title"
                 value={state.title || ""}
-                placeholder="e.g. I will do something I'm really good at"
+                placeholder="e.g. Minimalist Portfolio"
                 onChange={handleChange}
               />
             </div>
@@ -341,7 +300,7 @@ const Add = () => {
                 </div>
               </div>
               
-              {/* PHONE IMAGE - New section */}
+              {/* PHONE IMAGE */}
               <div className="input-group">
                 <label htmlFor="phone-image">Phone Image</label>
                 {state.phoneImage && (
@@ -377,45 +336,6 @@ const Add = () => {
                 </div>
               </div>
             </div>
-            
-            <div className="upload-container">
-              {/* ADDITIONAL IMAGES */}
-              <div className="input-group wide-group">
-                <label htmlFor="additional-images">Additional Images</label>
-                {state.images && state.images.length > 0 && (
-                  <div className="existing-images">
-                    {state.images.map((img, index) => (
-                      <div className="image-item" key={index}>
-                        <img src={img} alt={`Gig image ${index}`} />
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <div className={`file-dropzone ${fileNames.length ? 'has-file' : ''} ${uploading && files.length ? 'uploading' : ''}`}>
-                  <div className="upload-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                      <polyline points="17 8 12 3 7 8"></polyline>
-                      <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                  </div>
-                  <div className="upload-text">
-                    {uploading && files.length ? "Uploading..." : (fileNames.length ? `${fileNames.length} file(s) selected` : "Select additional images")}
-                  </div>
-                  <div className="upload-subtext">
-                    {!fileNames.length && !uploading && "or drag and drop them here"}
-                  </div>
-                  <input
-                    type="file"
-                    id="additional-images"
-                    multiple
-                    onChange={handleImagesChange}
-                    disabled={uploading}
-                    accept="image/*"
-                  />
-                </div>
-              </div>
-            </div>
 
             <div className="input-group">
               <label htmlFor="desc">Description</label>
@@ -423,7 +343,7 @@ const Add = () => {
                 id="desc"
                 name="desc"
                 value={state.desc || ""}
-                placeholder="Brief descriptions to introduce your service to customers"
+                placeholder="Detailed description of your theme"
                 cols="0"
                 rows="16"
                 onChange={handleChange}
@@ -443,7 +363,7 @@ const Add = () => {
                 id="shortTitle"
                 name="shortTitle"
                 value={state.shortTitle || ""}
-                placeholder="e.g. One-page web design"
+                placeholder="e.g. One-page theme"
                 onChange={handleChange}
               />
             </div>
@@ -455,7 +375,7 @@ const Add = () => {
                 name="shortDesc"
                 value={state.shortDesc || ""}
                 onChange={handleChange}
-                placeholder="Short description of your service"
+                placeholder="Brief description of your theme"
                 cols="30"
                 rows="10"
               ></textarea>
@@ -486,7 +406,7 @@ const Add = () => {
             <div className="input-group">
               <label>Add Features</label>
               <form action="" className="features" onSubmit={handleFeature}>
-                <input type="text" placeholder="e.g. page design" />
+                <input type="text" placeholder="e.g. responsive design" />
                 <button className="primary-btn" type="submit">add</button>
               </form>
               <div className="addedFeatures">

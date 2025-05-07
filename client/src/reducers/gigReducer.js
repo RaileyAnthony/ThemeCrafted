@@ -2,8 +2,8 @@ export const INITIAL_STATE = {
   title: "",
   cat: "",
   cover: "",
-  phoneImage: "", // Added new field for phone image
-  images: [],
+  phoneImage: "",
+  images: [], // Keeping the array but it will be empty
   desc: "",
   shortTitle: "",
   shortDesc: "",
@@ -24,8 +24,8 @@ export const gigReducer = (state, action) => {
       return {
         ...state,
         cover: action.payload.cover,
-        images: action.payload.images,
-        phoneImage: action.payload.phoneImage || state.phoneImage, // Handle the new phoneImage
+        images: action.payload.images || [], // Default to empty array if not provided
+        phoneImage: action.payload.phoneImage || state.phoneImage,
       };
     case "ADD_FEATURE":
       return {
@@ -42,6 +42,8 @@ export const gigReducer = (state, action) => {
     case "INIT_EDIT_GIG":
       return {
         ...action.payload,
+        // Ensure images is always an array even if it's missing in the payload
+        images: action.payload.images || [],
       };
     default:
       return state;

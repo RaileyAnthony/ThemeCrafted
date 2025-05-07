@@ -28,6 +28,10 @@ const ConversationSchema = new Schema(
       type: String,
       required: false,
     },
+    gigId: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
