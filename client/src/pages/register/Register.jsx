@@ -55,7 +55,6 @@ function Register() {
 
       // On success, show toast and navigate to login page
       toast.success("Registration successful! Please login with your credentials.", {
-        position: "top-center",
         autoClose: 5000,
       });
       
