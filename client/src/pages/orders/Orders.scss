@@ -1,52 +1,165 @@
 .orders {
   display: flex;
   justify-content: center;
-  color: #555;
+  align-items: center;
+  flex-direction: column;
+  padding: 150px 0px 40px 0px;
+  position: relative;
+
+  @media (max-width: 1025px) {
+    padding: 130px 0px 30px 0px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 120px 0px 20px 0px;
+  }
 
   .container {
-    width: 1400px;
-    padding: 50px 0px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 1280px;
+    padding: 0 16px;
+    gap: 30px;
+
+    @media (max-width: 1025px) {
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      gap: 15px;
+    }
 
     .title {
       display: flex;
+      flex-direction: row;
       justify-content: space-between;
+      align-items: center;
+      width: 100%;
 
-      button {
-        background-color: #1dbf73;
-        color: white;
-        font-weight: 500;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
+      h1 {
+        font-size: 2rem;
+        color: #333;
+      }
+    }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch; // For smooth scrolling on iOS
+      margin-bottom: 20px;
+      padding: 20px;
+
+      // Optional: custom scrollbar styling
+      &::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
       }
     }
 
     table {
       width: 100%;
+      min-width: 900px;
+      border-collapse: collapse;
+      border-spacing: 0px 15px;
+      padding: 10px;
+
+      tbody tr {
+        outline: 1px solid rgba(200, 200, 200, 0.5);
+        border-radius: 10px;
+        padding: 10px;
+
+        &:nth-child(odd) {
+          background-color: rgba(29, 191, 115, 0.05);
+        }
+
+        &:hover {
+          background-color: #f0f0f0;
+        }
+      }
+
+      thead {
+        color: white;
+        font-weight: bold;
+        text-align: left;
+
+        th {
+          padding: 10px 25px;
+          text-align: left;
+
+          @media (max-width: 1025px) {
+            padding: 8px 20px;
+          }
+
+          @media (max-width: 768px) {
+            padding: 6px 15px;
+          }
+        }
+      }
 
       tr {
-        height: 50px;
-        th {
-          text-align: left;
-        }
+        height: 60px;
+
         td {
-          sup {
-            font-size: 12px;
+          padding: 25px;
+
+          @media (max-width: 1025px) {
+            padding: 20px;
+          }
+
+          @media (max-width: 768px) {
+            padding: 15px;
+          }
+
+          td:not(:last-child) {
+            padding-right: 0px !important;
           }
 
           .image {
-            width: 50px;
-            height: 25px;
+            width: 60px;
+            height: 60px;
             object-fit: cover;
+            border-radius: 8px;
           }
 
           .message-btn {
-            width: 25px;
+            width: 35px;
             cursor: pointer;
+            transition: transform 0.2s ease;
+
+            &:hover {
+              transform: scale(1.1);
+            }
           }
         }
-        &:nth-child(even) {
-          background-color: #1dbf730f;
+      }
+
+      @media (max-width: 1025px) {
+        font-size: 0.85rem;
+      }
+
+      @media (max-width: 768px) {
+        font-size: 0.75rem;
+        table-layout: fixed;
+
+        th,
+        td {
+          padding: 8px;
+        }
+
+        .image {
+          width: 40px;
+          height: 40px;
+        }
+
+        .message-btn {
+          width: 20px;
         }
       }
     }

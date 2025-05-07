@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./Orders.scss";
 import { useQuery } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
@@ -33,42 +33,53 @@ const Orders = () => {
       }
     }
   };
+
   return (
     <div className="orders">
       {isLoading ? (
-        "loading"
+        "Loading..."
       ) : error ? (
-        "error"
+        "Error occurred"
       ) : (
         <div className="container">
           <div className="title">
             <h1>Orders</h1>
           </div>
-          <table>
-            <tr>
-              <th>Image</th>
-              <th>Title</th>
-              <th>Price</th>
-              <th>Contact</th>
-            </tr>
-            {data.map((order) => (
-              <tr key={order._id}>
-                <td>
-                  <img className="image" src={order.img} alt="" />
-                </td>
-                <td>{order.title}</td>
-                <td>${order.price}</td>
-                <td>
-                  <img
-                    className="message-btn"
-                    src="/src/assets/message.png"
-                    alt=""
-                    onClick={() => handleContact(order)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </table>
+          <div className="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Image</th>
+                  <th>Title</th>
+                  <th>Price</th>
+                  <th>Contact</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((order) => (
+                  <tr key={order._id}>
+                    <td>
+                      <img
+                        className="image"
+                        src={order.img}
+                        alt={order.title}
+                      />
+                    </td>
+                    <td>{order.title}</td>
+                    <td>${order.price}</td>
+                    <td>
+                      <img
+                        className="message-btn"
+                        src="/src/assets/message.png"
+                        alt="Message Icon"
+                        onClick={() => handleContact(order)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

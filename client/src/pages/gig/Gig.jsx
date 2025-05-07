@@ -9,26 +9,22 @@ import Reviews from "../../components/reviews/Reviews";
 function Gig() {
   const { id } = useParams();
 
+  // Fetch gig data
   const { isLoading, error, data } = useQuery({
     queryKey: ["gig"],
-    queryFn: () =>
-      newRequest.get(`/gigs/single/${id}`).then((res) => {
-        return res.data;
-      }),
+    queryFn: () => newRequest.get(`/gigs/single/${id}`).then((res) => res.data),
   });
 
   const userId = data?.userId;
 
+  // Fetch user data
   const {
     isLoading: isLoadingUser,
     error: errorUser,
     data: dataUser,
   } = useQuery({
     queryKey: ["user"],
-    queryFn: () =>
-      newRequest.get(`/users/${userId}`).then((res) => {
-        return res.data;
-      }),
+    queryFn: () => newRequest.get(`/users/${userId}`).then((res) => res.data),
     enabled: !!userId,
   });
 
@@ -41,10 +37,15 @@ function Gig() {
       ) : (
         <div className="container">
           <div className="left">
+            {/* Breadcrumbs */}
             <span className="breadcrumbs">
               ThemeCrafted {">"} Graphics & Design {">"}
             </span>
+
+            {/* Gig Title */}
             <h1>{data.title}</h1>
+
+            {/* User Info */}
             {isLoadingUser ? (
               "loading"
             ) : errorUser ? (
@@ -57,6 +58,8 @@ function Gig() {
                   alt=""
                 />
                 <span>{dataUser.username}</span>
+
+                {/* Rating */}
                 {!isNaN(data.totalStars / data.starNumber) && (
                   <div className="stars">
                     {Array(Math.round(data.totalStars / data.starNumber))
@@ -69,13 +72,19 @@ function Gig() {
                 )}
               </div>
             )}
+
+            {/* Image Slider */}
             <Slider slidesToShow={1} arrowsScroll={1} className="slider">
               {data.images.map((img) => (
                 <img key={img} src={img} alt="" />
               ))}
             </Slider>
+
+            {/* About This Gig */}
             <h2>About This Gig</h2>
             <p>{data.desc}</p>
+
+            {/* About The Seller */}
             {isLoadingUser ? (
               "loading"
             ) : errorUser ? (
@@ -90,6 +99,8 @@ function Gig() {
                   />
                   <div className="info">
                     <span>{dataUser.username}</span>
+
+                    {/* Seller Rating */}
                     {!isNaN(data.totalStars / data.starNumber) && (
                       <div className="stars">
                         {Array(Math.round(data.totalStars / data.starNumber))
@@ -102,9 +113,12 @@ function Gig() {
                         </span>
                       </div>
                     )}
+
                     <button>Contact Me</button>
                   </div>
                 </div>
+
+                {/* Seller Details */}
                 <div className="box">
                   <div className="items">
                     <div className="item">
@@ -133,14 +147,20 @@ function Gig() {
                 </div>
               </div>
             )}
+
+            {/* Reviews */}
             <Reviews gigId={id} />
           </div>
+
+          {/* Right Section (Price, Details, and Features) */}
           <div className="right">
             <div className="price">
               <h3>{data.shortTitle}</h3>
               <h2>$ {data.price}</h2>
             </div>
+
             <p>{data.shortDesc}</p>
+
             <div className="details">
               <div className="item">
                 <img src="/src/assets/clock.png" alt="" />
@@ -151,6 +171,8 @@ function Gig() {
                 <span>{data.revisionNumber} Revisions</span>
               </div>
             </div>
+
+            {/* Features */}
             <div className="features">
               {data.features.map((feature) => (
                 <div className="item" key={feature}>
@@ -159,8 +181,10 @@ function Gig() {
                 </div>
               ))}
             </div>
-            <Link to={`/pay/${id}`}>
-              <button>Continue</button>
+
+            {/* Continue Button */}
+            <Link to={`/pay/${id}`} className="pay-button">
+              Continue
             </Link>
           </div>
         </div>
