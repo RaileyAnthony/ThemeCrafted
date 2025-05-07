@@ -30,6 +30,30 @@ export const deleteGig = async (req, res, next) => {
     next(err);
   }
 };
+
+// ADD THIS NEW CONTROLLER FUNCTION
+export const updateGig = async (req, res, next) => {
+  try {
+    const gig = await Gig.findById(req.params.id);
+    
+    if (!gig) 
+      return next(createError(404, "Gig not found!"));
+      
+    if (gig.userId !== req.userId)
+      return next(createError(403, "You can update only your gig!"));
+
+    const updatedGig = await Gig.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    );
+    
+    res.status(200).json(updatedGig);
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getGig = async (req, res, next) => {
   try {
     const gig = await Gig.findById(req.params.id);
@@ -39,6 +63,7 @@ export const getGig = async (req, res, next) => {
     next(err);
   }
 };
+
 export const getGigs = async (req, res, next) => {
   const q = req.query;
   const filters = {
