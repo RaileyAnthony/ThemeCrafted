@@ -62,7 +62,7 @@ function Gigs() {
           </div>
           <div className="right">
             <span className="sortBy">Sort by</span>
-            <span className="sortType">
+            <span className="sortType"> 
               {sort === "sales" ? "Best Selling" : "Newest"}
             </span>
             <img

@@ -61,44 +61,59 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+
+    
+    @media (max-width: 480px) {
+      flex-direction: column;
+    }
+
+
+    .product-image {
+      width: 200px;
+      height: auto;
+      border-radius: 6px;
+      overflow: hidden;
+      flex-shrink: 0;
+      aspect-ratio: 16/9;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;
+      
+      @media (max-width: 480px) {
+        width: 100%;
+      }
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 0%;
+      }
+    }
 
     .product-details {
       display: flex;
       flex-direction: row;
-      justify-content: start;
+      justify-content: space-between;
       align-items: stretch;
       gap: 16px;
+      width: 100%;
+      min-height: 100%;
 
       @media (max-width: 480px) {
-        flex-direction: column;
+        min-height: none;
       }
 
-      .product-image {
-        width: auto;
-        height: 110px;
-        border-radius: 6px;
-        overflow: hidden;
-        flex-shrink: 0;
-        aspect-ratio: 16/9;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;
-        
-        @media (max-width: 768px) {
-          height: 90px;
-        }
-        
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center 0%;
-        }
-      }
-      
       .title-user {
         min-height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        @media (max-width: 480px) {
+          min-height: none;
+          justify-content: start;
+          gap: 6px;
+
+        }
 
         .seller-info {
           color: rgba(var(--black-color));
@@ -115,6 +130,12 @@
       flex-direction: column;
       justify-content: space-between;
       align-items: end;
+      @media (max-width: 480px) {
+        min-height: none;
+        justify-content: start;
+        gap: 6px;
+
+      }
 
       .view-product {
         text-decoration: underline;

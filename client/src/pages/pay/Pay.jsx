@@ -84,10 +84,10 @@ const Pay = () => {
           
           {gigData && (
             <div className="product-card">       
+              <div className="product-image">
+                <img src={gigData.cover} alt={gigData.title} />
+              </div>
               <div className="product-details">
-                <div className="product-image">
-                  <img src={gigData.cover} alt={gigData.title} />
-                </div>
                 <div className="title-user">
                   <h2>{gigData.title}</h2>
 
@@ -97,15 +97,15 @@ const Pay = () => {
 
                   <p className="date">{formatDate(gigData.createdAt)}</p>
                 </div>
+                <div className="price-preview">
+                  <h4 className="product-price">${gigData.price}.00</h4>
+
+                  <Link to={`/gig/${id}`} className="view-product link">
+                    <p>View <ArrowUpRight /></p>
+                  </Link>
+                </div>
               </div>
 
-              <div className="price-preview">
-                <h4 className="product-price">${gigData.price}.00</h4>
-
-                <Link to={`/gig/${id}`} className="view-product link">
-                  <p>View <ArrowUpRight /></p>
-                </Link>
-              </div>
             </div>
           )}
           
