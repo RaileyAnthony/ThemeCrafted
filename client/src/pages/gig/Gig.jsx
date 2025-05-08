@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Gig.scss";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import Reviews from "../../components/reviews/Reviews";
-import { Star, Download, Layers, MessageCircleMore } from "lucide-react";
+import { Star, Clock, Repeat, MessageCircleMore, AlertCircle } from "lucide-react";
 import Loader from "../../components/Loader/Loader";
 import { toast } from "react-toastify";
 
@@ -12,6 +12,10 @@ function Gig() {
   const { id } = useParams();
   const navigate = useNavigate();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  
+  // State to check restrictions
+  const [isUserSeller, setIsUserSeller] = useState(false);
+  const [isOwnGig, setIsOwnGig] = useState(false);
 
   // Fetch gig data
   const { isLoading, error, data } = useQuery({
@@ -20,6 +24,17 @@ function Gig() {
   });
 
   const userId = data?.userId;
+
+  // Check if this is the user's own gig or if user is a seller
+  useEffect(() => {
+    if (currentUser && userId) {
+      // Check if this is user's own gig
+      setIsOwnGig(currentUser._id === userId);
+      
+      // Check if user is a seller
+      setIsUserSeller(currentUser.isSeller);
+    }
+  }, [currentUser, userId]);
 
   // Fetch user data
   const {
@@ -61,10 +76,11 @@ function Gig() {
           <Star key={i} className="star" />
         ))}
         {halfStar && <Star className="half-star" />}
-        <span>{rating.toFixed(1)}</span>
+        <span>{Math.round(rating)}</span>
       </div>
     );
   };
+  
 
   const formatDate = (date) => {
     if (!date) return "Recently";
@@ -72,18 +88,19 @@ function Gig() {
     return d.toLocaleDateString("en-US", { month: "long", year: "numeric" });
   };
 
-  const handleContactClick = () => {
-    if (!dataUser || !currentUser) {
-      if (!currentUser) {
-        toast.error("Please log in to contact the seller");
-        return;
-      }
+  const handleContactClick = (e) => {
+    if (!currentUser) {
+      toast.error("Please log in to contact the seller", {
+        icon: <AlertCircle size={24} />
+      });
       return;
     }
     
     // Check if the user is trying to contact themselves
-    if (currentUser._id === userId) {
-      toast.error("You cannot contact yourself");
+    if (isOwnGig) {
+      toast.error("You cannot contact yourself about your own gig", {
+        icon: <AlertCircle size={24} />
+      });
       return;
     }
 
@@ -94,6 +111,34 @@ function Gig() {
     };
 
     mutation.mutate(conversation);
+  };
+
+  const handleBuyClick = (e) => {
+    e.preventDefault(); // Always prevent default link behavior
+    
+    if (!currentUser) {
+      toast.error("Please log in to purchase this theme", {
+        icon: <AlertCircle size={24} />
+      });
+      return;
+    }
+
+    if (isOwnGig) {
+      toast.error("You cannot purchase your own theme", {
+        icon: <AlertCircle size={24} />
+      });
+      return;
+    }
+
+    if (isUserSeller && !isOwnGig) {
+      toast.error("As a seller, you cannot purchase themes. Please use a buyer account.", {
+        icon: <AlertCircle size={24} />
+      });
+      return;
+    }
+    
+    // If all checks pass, navigate to the payment page
+    navigate(`/pay/${id}`);
   };
 
   if (isLoading) {
@@ -135,39 +180,42 @@ function Gig() {
               </div>
 
               <div className="stats">
-                <div className="reviews stat-card">
+              <div className="reviews stat-card">
+                <h3>
+                  {!isNaN(data.totalStars / data.starNumber) 
+                    ? Math.round(data.totalStars / data.starNumber) 
+                    : "New"} 
+                  <Star className="star" />
+                </h3>
+                <p>{data.starNumber || 0} reviews</p>
+              </div>
+
+                <div className="vl"></div>
+
+                <div className="delivery stat-card">
                   <h3>
-                    {!isNaN(data.totalStars / data.starNumber) 
-                      ? (data.totalStars / data.starNumber).toFixed(1) 
-                      : "New"} 
-                    <Star className="star" />
+                    {data.deliveryTime} <Clock />
                   </h3>
-                  <p>{data.starNumber || 0} reviews</p>
+                  <p>Days Delivery</p>
                 </div>
 
                 <div className="vl"></div>
 
-                <div className="purchases stat-card">
+                <div className="revisions stat-card">
                   <h3>
-                    {data.sales || 0} <Download />
+                    {data.revisionNumber} <Repeat />
                   </h3>
-                  <p>Purchases</p>
-                </div>
-
-                <div className="vl"></div>
-
-                <div className="version stat-card">
-                  <h3>
-                    1.0 <Layers />
-                  </h3>
-                  <p>Version</p>
+                  <p>Revisions</p>
                 </div>
               </div>
 
               <div className="buttons">
-                <Link to={`/pay/${id}`} className="primary-btn">
-                  Continue
-                </Link>
+                <button 
+                  className="primary-btn"
+                  onClick={handleBuyClick}
+                >
+                  Buy Now
+                </button>
                 <p>Uploaded on {formatDate(data.createdAt)}</p>
               </div>
             </div>
@@ -194,15 +242,17 @@ function Gig() {
                 <h2>About The Seller</h2>
                 <div className="profile">
                   <img src={dataUser.img || "/src/assets/noavatar.jpg"} alt={dataUser.username} />
-                  <div className="details">
+                  <div className="details"> 
                     {!isNaN(data.totalStars / data.starNumber) && (
                       <div className="rating">
                         {renderStarRating(data.totalStars / data.starNumber)}
                       </div>
                     )}
                     <h3>{dataUser.username}</h3>
-                    <p>Joined {formatDate(dataUser.createdAt)}</p>
-                    <button className="outline-btn" onClick={handleContactClick}>
+                    <button 
+                      className="outline-btn"
+                      onClick={handleContactClick}
+                    >
                       <MessageCircleMore /> Contact Me
                     </button>
                   </div>
@@ -239,36 +289,59 @@ function Gig() {
 
             {/* Reviews Section */}
             <div className="reviews section">
-              <h2>Reviews</h2>
-              <Reviews gigId={id} />
+              <Reviews gigId={id} sellerId={userId} />
             </div>
           </div>
 
           {/* Right Side (for desktop) */}
           <div className="right-side">
             <div className="details">
-              <h1>{data.title}</h1>
+              <div className="title-user">
+                <h1>{data.title}</h1>
+                <p>by {dataUser.username}</p>
+              </div>
               <h3>${data.price}.00</h3>
               <p>{data.shortDesc}</p>
             </div>
 
-            <div className="delivery-info">
-              <div className="delivery-item">
-                <span>Delivery Time</span>
-                <p>{data.deliveryTime} days</p>
+            {/* Updated stats section with revisions and delivery time */}
+            <div className="stats">
+              <div className="reviews stat-card">
+                <h3>
+                  {!isNaN(data.totalStars / data.starNumber) 
+                    ? Math.round(data.totalStars / data.starNumber) 
+                    : "New"} 
+                  <Star className="star" />
+                </h3>
+                <p>{data.starNumber || 0} reviews</p>
               </div>
-              <div className="delivery-item">
-                <span>Revisions</span>
-                <p>{data.revisionNumber}</p>
+
+              <div className="vl"></div>
+
+              <div className="delivery stat-card">
+                <h3>
+                  {data.deliveryTime} <Clock />
+                </h3>
+                <p>Days Delivery</p>
+              </div>
+
+              <div className="vl"></div>
+
+              <div className="revisions stat-card">
+                <h3>
+                  {data.revisionNumber} <Repeat />
+                </h3>
+                <p>Revisions</p>
               </div>
             </div>
 
             <div className="buttons">
-              <Link to={`/pay/${id}`} className="link">
-                <button className="primary-btn">
-                  Buy 
-                </button>
-              </Link>
+              <button 
+                className="primary-btn"
+                onClick={handleBuyClick}
+              >
+                Buy Now
+              </button>
               <p>Uploaded on {formatDate(data.createdAt)}</p>
             </div>
           </div>

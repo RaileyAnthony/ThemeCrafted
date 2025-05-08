@@ -151,6 +151,11 @@
             &::placeholder {
               color: rgba(var(--gray-color), 0.5);
             }
+
+            &:focus {
+              outline: none;
+              border: 1px solid rgba(var(--gray-color), 0.6);
+            }
           }
 
           .file-dropzone {
@@ -311,6 +316,11 @@
             
             &::placeholder {
               color: rgba(255, 255, 255, 0.5);
+            }
+
+            &:focus {
+              outline: none;
+              border: 1px solid rgba(255, 255, 255, 0.2);
             }
           }
 

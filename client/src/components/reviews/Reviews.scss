@@ -1,41 +1,115 @@
-.reviews {
-  margin-top: 50px;
+.reviews {  
 
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  .loading {
+    padding: 20px;
+    text-align: center;
+  }
+
+  .error-message {
+    padding: 15px;
+    background-color: #ffeeee;
+    color: #d32f2f;
+    border-radius: 8px;
+    margin: 10px 0;
+  }
+
+  .no-reviews {
+    padding: 20px;
+    text-align: center;
+    color: rgba(var(--gray-color));
+    border-radius: 8px;
+  }
+  
   .add {
-    margin-top: 20px;
+    padding: 20px;
+    // background-color: rgba(var(--off-white-color));
+    border: 1px solid rgba(var(--gray-color), 0.3);
+    border-radius: 8px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
+
+    .login-prompt, .seller-notice, .already-reviewed {
+      padding: 15px;
+      background-color: rgba(var(--off-white-color));
+      border-radius: 6px;
+      text-align: center;
+      
+      p {
+        color: rgba(var(--gray-color));
+      }
+
+      .link {
+        color: rgba(var(--primary-color));
+        text-decoration: underline;
+      }
+    }
 
     .addForm {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 15px;
 
-      input {
-        padding: 20px;
+      textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 12px;
+        border: 1px solid rgba(var(--gray-color), 0.3);
+        border-radius: 6px;
+        font-family: inherit;
+        resize: none;
+        background-color: rgba(var(--off-white-color), 0.2);
+        
+        &:focus {
+          outline: none;
+          border: 1px solid rgba(var(--gray-color), 0.6);
+        }
       }
 
-      select {
-        width: 200px;
-        padding: 20px;
-        align-self: flex-end;
-      }
-      button {
-        align-self: flex-end;
-        width: 100px;
-        border: none;
-        padding: 10px;
-        color: white;
-        background-color: #1dbf73;
-        cursor: pointer;
+      .rating-section {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        
+        span {
+          color: #555;
+          font-weight: 500;
+        }
+        
+        .star-selection {
+          display: flex;
+          gap: 5px;
+          
+          .star-container {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            &:hover .star-select {
+              transform: scale(1.1);
+            }
+          }
+          
+          .star-select {
+            transition: all 0.2s ease;
+            
+            &.filled {
+              color: #ffc107;
+              fill: #ffc107;
+            }
+            
+            &.empty {
+              color: #ccc;
+              fill: none;
+            }
+          }
+        }
       }
     }
-  }
-
-  hr {
-    height: 0;
-    border: 0.5px solid lightgray;
-    margin: 50px 0px;
   }
 }
