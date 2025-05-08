@@ -23,7 +23,6 @@ function Login() {
       
       // Show success toast
       toast.success("Login successful! Redirecting to homepage...", {
-        position: "top-center",
         autoClose: 3000,
       });
       

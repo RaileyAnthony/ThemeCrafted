@@ -256,10 +256,11 @@ const Add = () => {
                 onChange={handleChange}
               >
                 <option value="">Select a category</option>
-                <option value="design">Design</option>
-                <option value="web">Web Development</option>
-                <option value="animation">Animation</option>
-                <option value="music">Music</option>
+                <option value="ecommerce">E-Commerce</option>
+                <option value="booking">Booking</option>
+                <option value="portfolio">Portfolio</option>
+                <option value="restaurant">Restaurant</option>
+                <option value="tech-startup">Tech Startup</option>
               </select>
             </div>
             

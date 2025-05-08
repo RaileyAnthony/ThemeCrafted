@@ -88,7 +88,6 @@ function Register() {
       }
       
       toast.error(errorMessage, {
-        position: "top-center",
         autoClose: 5000,
       });
     } finally {
