@@ -12,38 +12,30 @@ const GigCard = ({ item }) => {
         return res.data;
       }),
   });
+  
   return (
-    <Link to={`/gig/${item._id}`} className="link theme-card">
-      <div className="gigCard">
-        <img src={item.cover} alt="" />
-        <div className="info">
-          {isLoading ? (
-            "loading"
-          ) : error ? (
-            "Something went wrong!"
-          ) : (
-            <div className="user">
-              <img src={data.img || "/src/assets/noavatar.jpg"} alt="" />
-              <span>{data.username}</span>
-            </div>
-          )}
-          <p>{item.shortDesc}</p>
-          <div className="star">
-            <img src="/src/assets/star.png" alt="" />
-            <span>
-              {!isNaN(item.totalStars / item.starNumber) &&
-                Math.round(item.totalStars / item.starNumber)}
-            </span>
-          </div>
+    <Link to={`/gig/${item._id}`} className="gig-card">
+      <div className="preview">
+        <img className="desktop" src={item.cover} alt={item.shortDesc} />
+        {item.phoneImage && (
+          <img className="phone" src={item.phoneImage} alt="Mobile view" />
+        )}
+      </div>
+      <div className="details">
+        <div className="title-price">
+          <h4 className="title">{item.title}</h4>
+          <p className="price">
+            {item.salesPrice && item.salesPrice < item.price ? (
+              <>
+                <span className="original">${item.price}</span>{" "}
+                <span className="discount">${item.salesPrice}</span>
+              </>
+            ) : (
+              <>${item.price}</>
+            )}
+          </p>
         </div>
-        <hr />
-        <div className="detail">
-          <img src="/src/assets/heart.png" alt="" />
-          <div className="price">
-            <span>STARTING AT</span>
-            <h2>$ {item.price}</h2>
-          </div>
-        </div>
+        <p className="excerpt">{item.shortDesc}</p>
       </div>
     </Link>
   );
