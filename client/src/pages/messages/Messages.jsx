@@ -181,7 +181,7 @@ const Messages = () => {
           ) : (
             <div className="no-messages">
               <p>You don't have any messages yet</p>
-              <Link to="/" className="browse-link">Browse themes</Link>
+              <Link to="/gigs" className="browse-link">Browse themes</Link>
             </div>
           )}
         </div>
