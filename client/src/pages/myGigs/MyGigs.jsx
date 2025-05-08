@@ -33,7 +33,7 @@ function MyGigs() {
     onError: (error) => {
       console.error("Error deleting gig:", error);
       alert("Failed to delete gig. Please try again.");
-    }
+    },
   });
 
   const handleDelete = (id) => {
@@ -49,7 +49,7 @@ function MyGigs() {
 
   // Format date helper function
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -65,11 +65,13 @@ function MyGigs() {
             <h1>My Themes</h1>
             {currentUser?.isSeller && (
               <Link className="link" to="/add">
-                <button className="primary-btn"><Plus size={18} /> Add New Gig</button>
+                <button className="primary-btn">
+                  <Plus size={18} /> Add New Theme
+                </button>
               </Link>
             )}
           </div>
-          
+
           {/* Wrap the table in a div with the table-container class */}
           <div className="table-container">
             <table>
@@ -101,14 +103,14 @@ function MyGigs() {
                     <td>{gig.sales || 0}</td>
                     <td>
                       <div className="buttons">
-                        <button 
+                        <button
                           className="outline-btn edit"
                           onClick={() => handleEdit(gig)}
                         >
                           <Edit size={16} />
                           Edit
                         </button>
-                        <button 
+                        <button
                           className="primary-btn delete"
                           onClick={() => handleDelete(gig._id)}
                         >
