@@ -70,6 +70,7 @@ const CheckoutForm = () => {
 
   return (
     <form className="checkout-form" onSubmit={handleSubmit}>
+      <h2>Payment Details</h2>
       <div className="checkout-form__group">
         <label
           htmlFor="link-authentication-element"
