@@ -131,6 +131,7 @@
         align-items: center;
         gap: 10px;
         position: relative;
+        cursor: pointer;
 
         img {
           width: 32px;
@@ -236,6 +237,11 @@
     text-align: center;
     gap: 30px;
     height: 100%;
+
+    .mobile-profile{
+      display: flex;
+      justify-content: center;
+    }
 
     .mobile-signup-btn {
       background-color: rgba(var(--primary-color));
