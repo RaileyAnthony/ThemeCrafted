@@ -173,11 +173,14 @@ function Gig() {
 
             {/* Mobile Right Side (for smaller screens) */}
             <div className="mobile-right-side">
-              <div className="details">
+            <div className="details">
+              <div className="title-user">
                 <h1>{data.title}</h1>
-                <h3>${data.price}.00</h3>
-                <p>{data.shortDesc}</p>
+                {dataUser && <p>by {dataUser.username}</p>}
               </div>
+              <h3>${data.price}.00</h3>
+              <p>{data.shortDesc}</p>
+            </div>
 
               <div className="stats">
               <div className="reviews stat-card">
@@ -298,7 +301,7 @@ function Gig() {
             <div className="details">
               <div className="title-user">
                 <h1>{data.title}</h1>
-                <p>by {dataUser.username}</p>
+                {dataUser && <p>by {dataUser.username}</p>}
               </div>
               <h3>${data.price}.00</h3>
               <p>{data.shortDesc}</p>
