@@ -1,10 +1,149 @@
-.pay {
-  position: relative;
-  z-index: 10;
+.pay-container {
   width: 100%;
-  max-width: 440px;
-  margin: 160px auto;
-  padding: 1rem;
-  box-sizing: border-box;
+  padding: 150px 0;
+  display: flex;
+  justify-content: center;
+  background-color: rgba(var(--off-white-color));
+}
+
+.pay-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.pay-wrapper {
+  width: 100%;
+  max-width: 1280px;
+  padding: 0px 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+  gap: 40px;
+  
+  @media (max-width: 900px) {
+    flex-direction: column-reverse;
+    gap: 20px;
+  }
+}
+
+.payment-section {
+  flex: 0.7;  
+  
+  @media (max-width: 900px) {
+    max-width: 100%;
+  }
+}
+
+.order-summary {
+  flex: 1;
   background: white;
+  border-radius: 8px;
+  border: 1px solid rgba(var(--gray-color), 0.2);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  
+  @media (max-width: 900px) {
+    flex: none;
+    width: 100%;
+  }
+  
+  .product-card {
+    display: flex;
+    gap: 15px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .product-details {
+      display: flex;
+      flex-direction: row;
+      justify-content: start;
+      align-items: stretch;
+      gap: 16px;
+
+      @media (max-width: 480px) {
+        flex-direction: column;
+      }
+
+      .product-image {
+        width: auto;
+        height: 110px;
+        border-radius: 6px;
+        overflow: hidden;
+        flex-shrink: 0;
+        aspect-ratio: 16/9;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px;
+        
+        @media (max-width: 768px) {
+          height: 90px;
+        }
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center 0%;
+        }
+      }
+      
+      .title-user {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .seller-info {
+          color: rgba(var(--black-color));
+          font-weight: 500;
+        }
+      }
+    }
+    
+    
+    
+    .price-preview {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: end;
+
+      .view-product {
+        text-decoration: underline;
+        display: flex;
+        align-items: center;
+  
+        svg {
+          height: 1rem;
+        }
+      }
+    }
+    
+    
+  }
+  
+  .order-total {
+    .subtotal, .service-fee, .total {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    
+    .total {
+      font-weight: 600;
+      font-size: 18px;
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 1px solid #eee;
+    }
+  }
 }
