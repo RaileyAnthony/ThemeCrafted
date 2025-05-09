@@ -1,5 +1,6 @@
 import React from 'react'
 import './CollectionsCategory.scss'
+import { useNavigate } from 'react-router-dom';
 
 // swiper import
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -9,9 +10,50 @@ import 'swiper/css/navigation';
 import 'swiper/css/autoplay';
 
 import { categories } from '../../data'
-import { Link } from 'react-router-dom';
 
 const CollectionsCategory = () => {
+  const navigate = useNavigate();
+  
+  const mapCategoryToGigsId = (categoryId) => {
+    // Handle case where the entire category object is passed instead of just the ID
+    if (typeof categoryId === 'object' && categoryId !== null) {
+      // Try to extract the ID if it exists
+      if (categoryId.id) {
+        categoryId = categoryId.id;
+      } else {
+        // Fallback to first category if we can't extract an ID
+        return "ecommerce";
+      }
+    }
+    
+    // Convert to string to handle number IDs
+    categoryId = String(categoryId);
+    
+    // Check known mappings
+    const mappings = {
+      "1": "ecommerce",
+      "2": "booking",
+      "3": "portfolio",
+      "4": "restaurant",
+      "5": "tech-startup"
+    };
+    
+    return mappings[categoryId] || "ecommerce";
+  };
+  
+  const handleCategoryClick = (category) => {
+    // Extract the category ID safely
+    const categoryId = typeof category === 'object' && category !== null 
+      ? category.id 
+      : category;
+    
+    // Map the category ID to one that Gigs component will recognize
+    const gigsComponentId = mapCategoryToGigsId(categoryId);
+    
+    // Navigate to gigs page with the mapped category ID
+    navigate(`/gigs?cat=${gigsComponentId}`);
+  };
+
   return (
     <div className='collections-category'>
       <div className="container">
@@ -50,7 +92,11 @@ const CollectionsCategory = () => {
             <div className="fade-left"></div>
             {categories.map((category) => (
               <SwiperSlide key={category.id}>
-                <Link className="category-slider-card" to="#">
+                <div 
+                  className="category-slider-card" 
+                  onClick={() => handleCategoryClick(category)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <div className="icon">  
                     <img src={category.svg}/>
                   </div>
@@ -58,7 +104,7 @@ const CollectionsCategory = () => {
                     <h3>{category.title}</h3>
                     <p>{category.desc}</p>
                   </div>
-                </Link>
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>

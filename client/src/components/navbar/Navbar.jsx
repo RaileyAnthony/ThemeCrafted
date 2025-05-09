@@ -97,7 +97,7 @@ const Navbar = () => {
                     {currentUser?.isSeller && (
                       <>
                         <Link className="link" to="/mygigs">
-                          Themes
+                          My Themes
                         </Link>
                         <Link className="link" to="/add">
                           Create New Theme

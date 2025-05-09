@@ -295,31 +295,7 @@
             }
           }
         }
-        
-        /* Submit button */
-        .primary-btn {
-          background-color: rgba(var(--primary-color));
-          color: white;
-          border: none;
-          border-radius: 8px;
-          padding: 12px 20px;
-          font-size: 16px;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          margin-top: 10px;
-          
-          &:hover {
-            background-color: rgba(var(--primary-color), 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-          }
-          
-          &:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          }
-        }
+      
       }
     }
   }

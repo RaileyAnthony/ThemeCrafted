@@ -14,7 +14,7 @@ function Gigs() {
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const navigate = useNavigate();
-  const { search } = useLocation();
+  const location = useLocation();
 
   // Categories data - using the exact categories from the Add form
   const categories = [
@@ -24,6 +24,53 @@ function Gigs() {
     { id: "restaurant", name: "Restaurant" },
     { id: "tech-startup", name: "Tech Startup" }
   ];
+
+  // Read URL parameters when component mounts or location changes
+  useEffect(() => {
+    // Add debugging logs
+    console.log("Location changed, current search:", location.search);
+    
+    const searchParams = new URLSearchParams(location.search);
+    
+    // Check if 'cat' parameter exists in the URL
+    const catParam = searchParams.get('cat');
+    console.log("Read 'cat' parameter:", catParam);
+    
+    if (catParam) {
+      // If the category parameter contains multiple comma-separated values
+      const categoryIds = catParam.split(',');
+      console.log("Category IDs after split:", categoryIds);
+      
+      // Check if these IDs exist in our categories list
+      const validIds = categoryIds.filter(id => 
+        categories.some(cat => cat.id === id)
+      );
+      console.log("Valid category IDs:", validIds);
+      
+      // Update selectedCategories state with categories from URL
+      // Only if we have valid IDs
+      if (validIds.length > 0) {
+        console.log("Setting selectedCategories to:", validIds);
+        setSelectedCategories(validIds);
+      } else {
+        console.warn("No valid category IDs found in URL parameter");
+      }
+    } else {
+      console.log("No 'cat' parameter found in URL");
+    }
+    
+    // Also handle search parameter if present
+    const searchParam = searchParams.get('search');
+    if (searchParam) {
+      setInput(searchParam);
+    }
+    
+  }, [location]);
+
+  // Additional debugging effect
+  useEffect(() => {
+    console.log("selectedCategories state updated:", selectedCategories);
+  }, [selectedCategories]);
 
   const handleCategoryChange = (categoryId) => {
     setSelectedCategories(prev => {
@@ -51,13 +98,8 @@ function Gigs() {
     params.append('sort', sort);
     
     // Add search term if available
-    if (search) {
-      // Extract search param from current URL search string
-      const searchParams = new URLSearchParams(search);
-      const searchTerm = searchParams.get('search');
-      if (searchTerm) {
-        params.append('search', searchTerm);
-      }
+    if (input) {
+      params.append('search', input);
     }
     
     // Add categories - using 'cat' parameter to match backend expectations
@@ -76,7 +118,7 @@ function Gigs() {
   };
 
   const { isLoading, error, data, refetch } = useQuery({
-    queryKey: ["gigs", search, minPrice, sort, selectedCategories],
+    queryKey: ["gigs", location.search, minPrice, sort, selectedCategories],
     queryFn: () => {
       const queryString = constructQueryString();
       console.log("API Request URL:", `/gigs${queryString}`);
@@ -95,12 +137,14 @@ function Gigs() {
   };
 
   useEffect(() => {
+    // Update the URL with current filters without causing a navigation
+    const queryString = constructQueryString();
+    window.history.replaceState(null, '', `/gigs${queryString}`);
+    
     refetch();
-  }, [sort, search, minPrice, selectedCategories]);
+  }, [sort, minPrice, selectedCategories]);
 
   const handleSubmit = () => {
-    // Update URL without triggering a full page navigation
-    navigate(`/gigs?search=${input}`, { replace: true });
     // Force refetch data with the new search parameter
     refetch();
   };
@@ -178,7 +222,7 @@ function Gigs() {
                     const category = categories.find(c => c.id === catId);
                     return (
                       <div className="filter-tag" key={catId}>
-                        <span>{category?.name}</span>
+                        <span>{category?.name || catId}</span>
                         <button onClick={() => handleCategoryChange(catId)}>&times;</button>
                       </div>
                     );

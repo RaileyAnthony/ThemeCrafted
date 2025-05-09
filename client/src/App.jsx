@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 // component imports
 import Navbar from "./components/navbar/Navbar";
@@ -28,6 +28,16 @@ import { createBrowserRouter, RouterProvider, Outlet, useLocation } from "react-
 import Pay from "./pages/pay/Pay.jsx";
 import Success from "./pages/Success/Success.jsx";
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  
+  return null;
+}
+
 function App() {
   const queryClient = new QueryClient();
   
@@ -41,6 +51,7 @@ function App() {
 
     return (
       <div className="app">
+        <ScrollToTop />
         {!shouldHideNavbar && <Navbar />}
         <Outlet />
         {!shouldHideFooter && <Footer />}

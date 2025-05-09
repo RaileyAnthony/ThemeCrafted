@@ -11,7 +11,10 @@ const Hero = () => {
   const [input, setInput] = useState("");
 
   const handleSubmit = () => {
-    navigate(`/gigs?search=${input}`);
+    // Update URL without triggering a full page navigation
+    navigate(`/gigs?search=${input}`, { replace: true });
+    // Force refetch data with the new search parameter
+    refetch();
   };
 
   return (
@@ -43,10 +46,12 @@ const Hero = () => {
               <Search className="search-icon" />
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search..."
+                value={input}
                 onChange={(e) => setInput(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
               />
-              <button onClick={handleSubmit}>Search</button>
+              {/* <button onClick={handleSubmit}>Search</button> */}
             </div>
           </div>
 

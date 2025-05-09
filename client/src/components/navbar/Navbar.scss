@@ -1,7 +1,7 @@
 .navbar {
   position: fixed;
   top: 0;
-  z-index: 1000; // Ensures it stays above all content
+  z-index: 1000;
   padding: 16px;
   display: flex;
   justify-content: center;
@@ -16,7 +16,7 @@
     gap: 50px;
     padding: 20px 40px;
     border-radius: 10px;
-    background-color: rgba(var(--secondary-color), 0.8);
+    background-color: rgba(194, 245, 195, 0.8);
     backdrop-filter: blur(35px);
 
     @media (max-width: 768px) {
