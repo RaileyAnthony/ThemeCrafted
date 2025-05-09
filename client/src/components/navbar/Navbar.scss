@@ -16,8 +16,8 @@
     gap: 50px;
     padding: 20px 40px;
     border-radius: 10px;
-    background-color: rgba(var(--accent-color), 0.3);
-    backdrop-filter: blur(10px);
+    background-color: rgba(var(--secondary-color), 0.8);
+    backdrop-filter: blur(35px);
 
     @media (max-width: 768px) {
       gap: 0;
