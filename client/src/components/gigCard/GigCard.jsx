@@ -31,7 +31,7 @@ const GigCard = ({ item }) => {
                 <span className="discount">${item.salesPrice}</span>
               </>
             ) : (
-              <>${item.price}</>
+              <>${item.price}.00</>
             )}
           </p>
         </div>
