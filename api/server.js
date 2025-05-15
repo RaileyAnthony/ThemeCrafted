@@ -24,7 +24,15 @@ const connect = async () => {
   }
 };
 
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://themecrafted-backend.vercel.app/",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -43,7 +51,7 @@ app.use((err, req, res, next) => {
   return res.status(errorStatus).send(errorMessage);
 });
 
-app.listen(8800, () => {
+app.listen(process.env.PORT || 8800, () => {
   connect();
-  console.log("Backend server is running!");
+  console.log(`Backend server is running on port ${process.env.PORT || 8800}!`);
 });
