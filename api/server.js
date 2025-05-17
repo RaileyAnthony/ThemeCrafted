@@ -28,7 +28,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://themecrafted-backend.vercel.app",
+      "https://themecrafted-backend.onrender.com",
     ],
     credentials: true,
   })
