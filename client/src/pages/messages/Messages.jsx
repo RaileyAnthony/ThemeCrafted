@@ -4,15 +4,19 @@ import "./Messages.scss";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
 import moment from "moment";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/loader/Loader";
 import { toast } from "react-toastify";
 
 const Messages = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const [userDetails, setUserDetails] = useState({});
-  
+
   // Fetch all conversations for the current user
-  const { isLoading, error, data: conversations } = useQuery({
+  const {
+    isLoading,
+    error,
+    data: conversations,
+  } = useQuery({
     queryKey: ["conversations"],
     queryFn: () =>
       newRequest.get(`/conversations`).then((res) => {
@@ -35,7 +39,7 @@ const Messages = () => {
     onError: (error) => {
       toast.error("Failed to mark as read");
       console.error("Error marking as read:", error);
-    }
+    },
   });
 
   const handleRead = (id) => {
@@ -46,7 +50,7 @@ const Messages = () => {
   const isUnread = (conversation) => {
     // Make sure conversation has the necessary properties
     if (!conversation) return false;
-    
+
     if (currentUser.isSeller) {
       return conversation.readBySeller === false;
     } else {
@@ -57,10 +61,10 @@ const Messages = () => {
   // Function to get the other user's ID (not the current user)
   const getOtherUserId = (conversation) => {
     if (!conversation) return "";
-    
+
     // If current user is the seller, return buyer ID, otherwise return seller ID
-    return currentUser._id === conversation.sellerId 
-      ? conversation.buyerId 
+    return currentUser._id === conversation.sellerId
+      ? conversation.buyerId
       : conversation.sellerId;
   };
 
@@ -69,14 +73,14 @@ const Messages = () => {
     const fetchUserDetails = async () => {
       if (conversations && conversations.length > 0) {
         // Get all unique user IDs who aren't the current user
-        const userIds = conversations.map(c => getOtherUserId(c));
-        
+        const userIds = conversations.map((c) => getOtherUserId(c));
+
         // Remove duplicates
-        const uniqueUserIds = [...new Set(userIds)].filter(id => id); // Remove empty strings
-        
+        const uniqueUserIds = [...new Set(userIds)].filter((id) => id); // Remove empty strings
+
         try {
           const details = {};
-          
+
           // Fetch user details in parallel
           await Promise.all(
             uniqueUserIds.map(async (userId) => {
@@ -84,18 +88,18 @@ const Messages = () => {
                 const response = await newRequest.get(`/users/${userId}`);
                 details[userId] = {
                   username: response.data.username,
-                  img: response.data.img || "/src/assets/noavatar.jpg" // Default image if none exists
+                  img: response.data.img || "/src/assets/noavatar.jpg", // Default image if none exists
                 };
               } catch (error) {
                 console.error(`Error fetching user ${userId}:`, error);
                 details[userId] = {
                   username: "Unknown User",
-                  img: "/src/assets/noavatar.jpg"
+                  img: "/src/assets/noavatar.jpg",
                 };
               }
             })
           );
-          
+
           setUserDetails(details);
         } catch (error) {
           console.error("Error fetching user details:", error);
@@ -122,7 +126,7 @@ const Messages = () => {
           <div className="title">
             <h1>Messages</h1>
           </div>
-          
+
           {conversations && conversations.length > 0 ? (
             <div className="table-container">
               <table>
@@ -138,13 +142,13 @@ const Messages = () => {
                   {conversations.map((c) => {
                     const otherUserId = getOtherUserId(c);
                     const unread = isUnread(c);
-                    const user = userDetails[otherUserId] || { username: "Unknown User", img: "/src/assets/noavatar.jpg" };
-                    
+                    const user = userDetails[otherUserId] || {
+                      username: "Unknown User",
+                      img: "/src/assets/noavatar.jpg",
+                    };
+
                     return (
-                      <tr 
-                        className={unread ? "unread" : ""} 
-                        key={c.id}
-                      >
+                      <tr className={unread ? "unread" : ""} key={c.id}>
                         <td>
                           <div className="user-cell">
                             <div className="avatar">
@@ -155,14 +159,15 @@ const Messages = () => {
                         </td>
                         <td>
                           <Link to={`/message/${c.id}`} className="link">
-                            {c?.lastMessage?.substring(0, 100) || "New conversation"}
+                            {c?.lastMessage?.substring(0, 100) ||
+                              "New conversation"}
                             {c?.lastMessage?.length > 100 && "..."}
                           </Link>
                         </td>
                         <td>{moment(c.updatedAt).fromNow()}</td>
                         <td>
                           {unread ? (
-                            <button 
+                            <button
                               className="mark-read-btn"
                               onClick={() => handleRead(c.id)}
                             >
@@ -181,7 +186,9 @@ const Messages = () => {
           ) : (
             <div className="no-messages">
               <p>You don't have any messages yet</p>
-              <Link to="/gigs" className="browse-link">Browse themes</Link>
+              <Link to="/gigs" className="browse-link">
+                Browse themes
+              </Link>
             </div>
           )}
         </div>
