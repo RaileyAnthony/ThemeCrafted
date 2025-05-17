@@ -36,25 +36,14 @@ export const login = async (req, res, next) => {
     );
 
     const { password, ...info } = user._doc;
-    res
-      .cookie("accessToken", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-      })
-      .status(200)
-      .send(info);
+    // Return token in response body, not as a cookie
+    res.status(200).send({ ...info, token });
   } catch (err) {
     next(err);
   }
 };
 
 export const logout = async (req, res) => {
-  res
-    .clearCookie("accessToken", {
-      sameSite: "none",
-      secure: true,
-    })
-    .status(200)
-    .send("User has been logged out.");
+  // No cookies to clear, just respond OK
+  res.status(200).send("User has been logged out.");
 };

@@ -13,12 +13,12 @@ export const AuthProvider = ({ children }) => {
     const verifyAuth = async () => {
       setLoading(true);
       const storedUser = JSON.parse(localStorage.getItem("currentUser"));
-      
+
       if (storedUser) {
         try {
           // Verify with backend that user is still authenticated
           const response = await newRequest.get("/auth/verify");
-          
+
           if (response.status === 200) {
             // User is authenticated, use the latest user data
             setCurrentUser(storedUser);
@@ -42,6 +42,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const response = await newRequest.post("/auth/login", credentials);
+    localStorage.setItem("accessToken", response.data.token);
     localStorage.setItem("currentUser", JSON.stringify(response.data));
     setCurrentUser(response.data);
     return response.data;
@@ -66,7 +67,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, loading, login, logout, updateUser }}>
+    <AuthContext.Provider
+      value={{ currentUser, loading, login, logout, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
