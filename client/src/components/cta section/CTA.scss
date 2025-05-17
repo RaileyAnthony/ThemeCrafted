@@ -7,6 +7,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  a {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
 
   .grid-bg {
     position: relative;
@@ -14,8 +21,12 @@
     height: 100%;
     z-index: 0;
     background-size: 70px 70px;
-    background-image: linear-gradient(to right, rgba(var(--gray-color)) 1px, transparent 1px),
-                      linear-gradient(to bottom, rgba(var(--gray-color)) 1px, transparent 1px);
+    background-image: linear-gradient(
+        to right,
+        rgba(var(--gray-color)) 1px,
+        transparent 1px
+      ),
+      linear-gradient(to bottom, rgba(var(--gray-color)) 1px, transparent 1px);
 
     .grid-overlay {
       pointer-events: none;
@@ -27,7 +38,11 @@
       justify-content: center;
       align-items: center;
       background-color: rgba(var(--black-color));
-      mask-image: radial-gradient(circle at center -50%, rgba(0,0,0,0.2) 25%, black 85%);
+      mask-image: radial-gradient(
+        circle at center -50%,
+        rgba(0, 0, 0, 0.2) 25%,
+        black 85%
+      );
     }
 
     .light {
@@ -45,7 +60,7 @@
       width: 50%;
       height: 100%;
       pointer-events: none;
-  
+
       span {
         position: absolute;
         width: 1px;
@@ -53,7 +68,7 @@
         background: white;
         border-radius: 100%;
         opacity: 0.6;
-    
+
         // Generate multiple particles with random position and animation delay
         @for $i from 1 through 100 {
           &:nth-child(#{$i}) {
@@ -63,9 +78,7 @@
         }
       }
     }
-  
-  
-    
+
     .container {
       position: relative;
       z-index: 2;
@@ -84,14 +97,14 @@
         flex-direction: column;
         gap: 30px;
       }
-      
+
       .left-side {
         flex: 1;
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;  
+        align-items: center;
 
         @media (max-width: 1025px) {
           flex: none;
@@ -100,7 +113,7 @@
 
         .device-mockup {
           position: relative;
-          z-index: 2 ;
+          z-index: 2;
           margin: 0 auto;
           img {
             width: 100%;
@@ -118,7 +131,7 @@
           }
 
           @media (max-width: 600px) {
-            top: -30%;  
+            top: -30%;
             right: none;
           }
           img {
@@ -155,14 +168,14 @@
           gap: 40px;
         }
 
-       .title-desc {
+        .title-desc {
           display: flex;
           flex-direction: column;
           gap: 20px;
           justify-content: start;
           align-items: start;
           @media (max-width: 1025px) {
-            gap: 1  0px;
+            gap: 1 0px;
           }
         }
 
@@ -171,7 +184,11 @@
         }
 
         .logo {
-          background: linear-gradient(to top, rgba(var(--primary-color)), #97de73);
+          background: linear-gradient(
+            to top,
+            rgba(var(--primary-color)),
+            #97de73
+          );
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           font-family: "LogoFont", sans-serif;

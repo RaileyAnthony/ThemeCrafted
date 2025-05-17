@@ -60,11 +60,7 @@ const Navbar = () => {
             <Link to="/" className="link">
               <div className="logo">
                 <img className="logoImg" src={logo} alt="" />
-                <h4 className="logoText">
-                  Theme
-                  <br />
-                  Crafted
-                </h4>
+                <h3 className="logoText">ThemeCrafted</h3>
               </div>
             </Link>
           </div>
@@ -78,6 +74,9 @@ const Navbar = () => {
 
           <div className="right-side desktop-only">
             <div className="links desktop-only">
+              <Link className="link" to="/">
+                Home
+              </Link>
               <Link className="link" to="/collections">
                 Collections
               </Link>
@@ -119,14 +118,10 @@ const Navbar = () => {
             ) : (
               <>
                 <Link className="link" to="/login">
-                  <button className="outline-btn">
-                    Log In
-                  </button>
+                  <button className="outline-btn">Log In</button>
                 </Link>
                 <Link className="link" to="/register">
-                  <button className="primary-btn">
-                    Sign Up 
-                  </button>
+                  <button className="primary-btn">Sign Up</button>
                 </Link>
               </>
             )}
@@ -150,6 +145,13 @@ const Navbar = () => {
           <div className="mobile-links">
             <Link
               className="link"
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              className="link"
               to="/collections"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -157,7 +159,7 @@ const Navbar = () => {
             </Link>
             <Link
               className="link"
-              to="/"
+              to="/gigs"
               onClick={() => setMobileMenuOpen(false)}
             >
               Discover
