@@ -6,7 +6,7 @@ import newRequest from "../../utils/newRequest";
 import { useParams, Link } from "react-router-dom";
 import CheckoutForm from "../../components/checkoutForm/CheckoutForm";
 import { ArrowUpRight } from "lucide-react";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/loader/Loader";
 
 const stripePromise = loadStripe(
   "pk_test_51RLrDs4aK2mq0i92agkjysls0DvcWdE99yh7lu7wGp3u5HZBBij3t7xdLsAQINyZyufTZyCyoD9PJwoVkkDhEwyj00UvZxF9oc"
@@ -26,14 +26,16 @@ const Pay = () => {
         // Fetch the gig data
         const gigRes = await newRequest.get(`/gigs/single/${id}`);
         setGigData(gigRes.data);
-        
+
         // Fetch the seller data
         const sellerId = gigRes.data.userId;
         const sellerRes = await newRequest.get(`/users/${sellerId}`);
         setSellerData(sellerRes.data);
-        
+
         // Create payment intent
-        const paymentRes = await newRequest.post(`/orders/create-payment-intent/${id}`);
+        const paymentRes = await newRequest.post(
+          `/orders/create-payment-intent/${id}`
+        );
         setClientSecret(paymentRes.data.clientSecret);
       } catch (err) {
         console.error("Error fetching data:", err);
@@ -78,12 +80,12 @@ const Pay = () => {
             </Elements>
           )}
         </div>
-        
+
         <div className="order-summary">
           <h2>Order Summary</h2>
-          
+
           {gigData && (
-            <div className="product-card">       
+            <div className="product-card">
               <div className="product-image">
                 <img src={gigData.cover} alt={gigData.title} />
               </div>
@@ -101,14 +103,15 @@ const Pay = () => {
                   <h4 className="product-price">${gigData.price}.00</h4>
 
                   <Link to={`/gig/${id}`} className="view-product link">
-                    <p>View <ArrowUpRight /></p>
+                    <p>
+                      View <ArrowUpRight />
+                    </p>
                   </Link>
                 </div>
               </div>
-
             </div>
           )}
-          
+
           <div className="order-total">
             <div className="subtotal">
               <span>Subtotal</span>

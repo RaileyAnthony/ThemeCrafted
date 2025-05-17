@@ -5,13 +5,13 @@ import { gigReducer, INITIAL_STATE } from "../../reducers/gigReducer";
 import upload from "../../utils/upload";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import newRequest from "../../utils/newRequest";
-import Loader from "../../components/Loader/Loader";
+import Loader from "../../components/loader/Loader";
 import { toast } from "react-toastify";
 
 const Add = () => {
   const location = useLocation();
   const isEditing = location.search.includes("edit=true");
-  
+
   const [singleFile, setSingleFile] = useState(undefined);
   const [singleFileName, setSingleFileName] = useState("");
   // Add new states for phone image
@@ -30,11 +30,11 @@ const Add = () => {
       const editGigData = JSON.parse(localStorage.getItem("editGigData"));
       if (editGigData) {
         setGigId(editGigData._id);
-        
+
         // Update state with all fields from the gig
-        dispatch({ 
-          type: "INIT_EDIT_GIG", 
-          payload: editGigData 
+        dispatch({
+          type: "INIT_EDIT_GIG",
+          payload: editGigData,
         });
       }
     }
@@ -46,7 +46,7 @@ const Add = () => {
       payload: { name: e.target.name, value: e.target.value },
     });
   };
-  
+
   const handleFeature = (e) => {
     e.preventDefault();
     const feature = e.target[0].value.trim();
@@ -66,7 +66,7 @@ const Add = () => {
       payload: feature,
     });
     e.target[0].value = "";
-    
+
     toast.success("Feature added successfully");
   };
 
@@ -78,7 +78,7 @@ const Add = () => {
         toast.error("Please upload an image file");
         return;
       }
-      
+
       setSingleFile(file);
       setSingleFileName(file.name);
     }
@@ -93,7 +93,7 @@ const Add = () => {
         toast.error("Please upload an image file");
         return;
       }
-      
+
       setPhoneFile(file);
       setPhoneFileName(file.name);
     }
@@ -102,12 +102,12 @@ const Add = () => {
   // Auto-upload function
   const handleUpload = useCallback(async () => {
     if (!singleFile && !phoneFile) return;
-    
+
     setUploading(true);
     try {
       let cover = state.cover;
       let phoneImage = state.phoneImage;
-      
+
       // Upload cover image if selected
       if (singleFile) {
         cover = await upload(singleFile);
@@ -115,7 +115,7 @@ const Add = () => {
         setSingleFileName(""); // Clear file name
         toast.success("Cover image uploaded successfully");
       }
-      
+
       // Upload phone image if selected
       if (phoneFile) {
         phoneImage = await upload(phoneFile);
@@ -123,10 +123,10 @@ const Add = () => {
         setPhoneFileName(""); // Clear file name
         toast.success("Phone image uploaded successfully");
       }
-      
-      dispatch({ 
-        type: "ADD_IMAGES", 
-        payload: { cover, images: state.images, phoneImage } 
+
+      dispatch({
+        type: "ADD_IMAGES",
+        payload: { cover, images: state.images, phoneImage },
       });
     } catch (err) {
       console.error("Error uploading images:", err);
@@ -159,8 +159,11 @@ const Add = () => {
     onError: (error) => {
       console.error("Error creating theme:", error);
       setLoading(false);
-      toast.error(error?.response?.data?.message || "Failed to create theme. Please try again.");
-    }
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to create theme. Please try again."
+      );
+    },
   });
 
   const updateMutation = useMutation({
@@ -177,13 +180,16 @@ const Add = () => {
     onError: (error) => {
       console.error("Error updating theme:", error);
       setLoading(false);
-      toast.error(error?.response?.data?.message || "Failed to update theme. Please try again.");
-    }
+      toast.error(
+        error?.response?.data?.message ||
+          "Failed to update theme. Please try again."
+      );
+    },
   });
 
   const validateForm = () => {
     const missingFields = [];
-    
+
     if (!state.title) missingFields.push("Title");
     if (!state.desc) missingFields.push("Description");
     if (!state.cat) missingFields.push("Category");
@@ -193,15 +199,15 @@ const Add = () => {
     if (!state.deliveryTime) missingFields.push("Delivery Time");
     if (!state.revisionNumber) missingFields.push("Revision Number");
     if (!state.price) missingFields.push("Price");
-    
+
     return missingFields;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const missingFields = validateForm();
-    
+
     if (missingFields.length > 0) {
       toast.error(
         <div>
@@ -215,9 +221,9 @@ const Add = () => {
       );
       return;
     }
-    
+
     setLoading(true);
-    
+
     if (isEditing && gigId) {
       updateMutation.mutate({ id: gigId, gig: state });
     } else {
@@ -246,12 +252,12 @@ const Add = () => {
                 onChange={handleChange}
               />
             </div>
-            
+
             <div className="input-group">
               <label htmlFor="cat">Category</label>
-              <select 
-                name="cat" 
-                id="cat" 
+              <select
+                name="cat"
+                id="cat"
                 value={state.cat || ""}
                 onChange={handleChange}
               >
@@ -263,33 +269,48 @@ const Add = () => {
                 <option value="tech-startup">Tech Startup</option>
               </select>
             </div>
-            
+
             <div className="upload-container">
               {/* COVER IMAGE */}
               <div className="input-group">
                 <label htmlFor="cover-image">Cover Image</label>
                 {state.cover && (
                   <div className="existing-image">
-                    <img 
-                      src={state.cover} 
-                      alt="Current cover" 
-                    />
+                    <img src={state.cover} alt="Current cover" />
                     <p>Current cover image</p>
                   </div>
                 )}
-                <div className={`file-dropzone ${singleFileName ? 'has-file' : ''} ${uploading && singleFile ? 'uploading' : ''}`}>
+                <div
+                  className={`file-dropzone ${
+                    singleFileName ? "has-file" : ""
+                  } ${uploading && singleFile ? "uploading" : ""}`}
+                >
                   <div className="upload-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                       <polyline points="17 8 12 3 7 8"></polyline>
                       <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
                   </div>
                   <div className="upload-text">
-                    {uploading && singleFile ? "Uploading..." : (singleFileName ? singleFileName : "Select a cover image")}
+                    {uploading && singleFile
+                      ? "Uploading..."
+                      : singleFileName
+                      ? singleFileName
+                      : "Select a cover image"}
                   </div>
                   <div className="upload-subtext">
-                    {!singleFileName && !uploading && "or drag and drop it here"}
+                    {!singleFileName &&
+                      !uploading &&
+                      "or drag and drop it here"}
                   </div>
                   <input
                     type="file"
@@ -300,29 +321,42 @@ const Add = () => {
                   />
                 </div>
               </div>
-              
+
               {/* PHONE IMAGE */}
               <div className="input-group">
                 <label htmlFor="phone-image">Phone Image</label>
                 {state.phoneImage && (
                   <div className="existing-image">
-                    <img 
-                      src={state.phoneImage} 
-                      alt="Current phone view" 
-                    />
+                    <img src={state.phoneImage} alt="Current phone view" />
                     <p>Current phone image</p>
                   </div>
                 )}
-                <div className={`file-dropzone ${phoneFileName ? 'has-file' : ''} ${uploading && phoneFile ? 'uploading' : ''}`}>
+                <div
+                  className={`file-dropzone ${
+                    phoneFileName ? "has-file" : ""
+                  } ${uploading && phoneFile ? "uploading" : ""}`}
+                >
                   <div className="upload-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                       <polyline points="17 8 12 3 7 8"></polyline>
                       <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
                   </div>
                   <div className="upload-text">
-                    {uploading && phoneFile ? "Uploading..." : (phoneFileName ? phoneFileName : "Select phone image")}
+                    {uploading && phoneFile
+                      ? "Uploading..."
+                      : phoneFileName
+                      ? phoneFileName
+                      : "Select phone image"}
                   </div>
                   <div className="upload-subtext">
                     {!phoneFileName && !uploading && "or drag and drop it here"}
@@ -350,12 +384,12 @@ const Add = () => {
                 onChange={handleChange}
               ></textarea>
             </div>
-            
+
             <button className="primary-btn" onClick={handleSubmit}>
               {isEditing ? "Update" : "Create"}
             </button>
           </div>
-          
+
           <div className="details">
             <div className="input-group">
               <label htmlFor="shortTitle">Service Title</label>
@@ -368,7 +402,7 @@ const Add = () => {
                 onChange={handleChange}
               />
             </div>
-            
+
             <div className="input-group">
               <label htmlFor="shortDesc">Short Description</label>
               <textarea
@@ -381,18 +415,18 @@ const Add = () => {
                 rows="10"
               ></textarea>
             </div>
-            
+
             <div className="input-group">
               <label htmlFor="deliveryTime">Delivery Time (e.g. 3 days)</label>
-              <input 
-                type="number" 
+              <input
+                type="number"
                 id="deliveryTime"
-                name="deliveryTime" 
-                value={state.deliveryTime || ""} 
-                onChange={handleChange} 
+                name="deliveryTime"
+                value={state.deliveryTime || ""}
+                onChange={handleChange}
               />
             </div>
-            
+
             <div className="input-group">
               <label htmlFor="revisionNumber">Revision Number</label>
               <input
@@ -403,12 +437,14 @@ const Add = () => {
                 onChange={handleChange}
               />
             </div>
-            
+
             <div className="input-group">
               <label>Add Features</label>
               <form action="" className="features" onSubmit={handleFeature}>
                 <input type="text" placeholder="e.g. responsive design" />
-                <button className="primary-btn" type="submit">add</button>
+                <button className="primary-btn" type="submit">
+                  add
+                </button>
               </form>
               <div className="addedFeatures">
                 {state?.features?.map((f) => (
@@ -426,15 +462,15 @@ const Add = () => {
                 ))}
               </div>
             </div>
-            
+
             <div className="input-group">
               <label htmlFor="price">Price</label>
-              <input 
-                type="number" 
+              <input
+                type="number"
                 id="price"
                 name="price"
-                value={state.price || ""} 
-                onChange={handleChange} 
+                value={state.price || ""}
+                onChange={handleChange}
               />
             </div>
           </div>
