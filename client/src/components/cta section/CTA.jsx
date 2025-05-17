@@ -37,7 +37,7 @@ const CTA = () => {
                 brand—ThemeCrafted has the tools to get you there.
               </p>
             </div>
-            <Link to="/discover">
+            <Link to="/gigs">
               <button className="primary-btn">
                 Discover Themes <ArrowRight />
               </button>
