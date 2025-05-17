@@ -42,7 +42,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const response = await newRequest.post("/auth/login", credentials);
-    localStorage.setItem("accessToken", response.data.token);
     localStorage.setItem("currentUser", JSON.stringify(response.data));
     setCurrentUser(response.data);
     return response.data;
