@@ -39,8 +39,8 @@ export const login = async (req, res, next) => {
     res
       .cookie("accessToken", token, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
+        secure: process.env.NODE_ENV === "production", // true only on production (HTTPS)
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       })
       .status(200)
       .send(info);
