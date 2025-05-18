@@ -6,8 +6,9 @@
   align-items: center;
   width: 100%;
   height: 100%;
+  margin-top: 160px;
   min-height: 200px;
-  
+
   // For full-page loader
   &.fullscreen {
     position: fixed;
@@ -31,7 +32,7 @@
   position: relative;
   width: 80px;
   height: 80px;
-  
+
   div {
     position: absolute;
     top: 33px;
@@ -40,22 +41,22 @@
     border-radius: 50%;
     background: rgba(var(--primary-color)); // Default primary color
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
-    
+
     &:nth-child(1) {
       left: 8px;
       animation: loader-spinner1 0.6s infinite;
     }
-    
+
     &:nth-child(2) {
       left: 8px;
       animation: loader-spinner2 0.6s infinite;
     }
-    
+
     &:nth-child(3) {
       left: 32px;
       animation: loader-spinner2 0.6s infinite;
     }
-    
+
     &:nth-child(4) {
       left: 56px;
       animation: loader-spinner3 0.6s infinite;
@@ -67,20 +68,20 @@
 .loader-small .loader-spinner {
   width: 40px;
   height: 40px;
-  
+
   div {
     top: 16px;
     width: 7px;
     height: 7px;
-    
+
     &:nth-child(1) {
       left: 4px;
     }
-    
+
     &:nth-child(3) {
       left: 16px;
     }
-    
+
     &:nth-child(4) {
       left: 28px;
     }
@@ -90,20 +91,20 @@
 .loader-large .loader-spinner {
   width: 120px;
   height: 120px;
-  
+
   div {
     top: 48px;
     width: 18px;
     height: 18px;
-    
+
     &:nth-child(1) {
       left: 12px;
     }
-    
+
     &:nth-child(3) {
       left: 48px;
     }
-    
+
     &:nth-child(4) {
       left: 84px;
     }
@@ -116,7 +117,7 @@
 }
 
 .loader-success .loader-spinner div {
-  background: #1DBF73; // Success color
+  background: #1dbf73; // Success color
 }
 
 // Animations
