@@ -70,7 +70,7 @@ const Orders = () => {
                     <td>
                       <img
                         className="message-btn"
-                        src="/src/assets/message.png"
+                        src="/message.png"
                         alt="Message Icon"
                         onClick={() => handleContact(order)}
                       />
