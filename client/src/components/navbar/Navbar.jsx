@@ -103,9 +103,11 @@ const Navbar = () => {
                         </Link>
                       </>
                     )}
-                    <Link className="link" to="/orders">
-                      Orders
-                    </Link>
+                    {!currentUser?.isSeller && (
+                      <Link className="link" to="/orders">
+                        Orders
+                      </Link>
+                    )}
                     <Link className="link" to="/messages">
                       Messages
                     </Link>
@@ -186,13 +188,15 @@ const Navbar = () => {
 
             {currentUser && (
               <>
-                <Link
-                  className="link"
-                  to="/orders"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Orders
-                </Link>
+                {!currentUser?.isSeller && (
+                  <Link
+                    className="link"
+                    to="/orders"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Orders
+                  </Link>
+                )}
                 <Link
                   className="link"
                   to="/messages"
