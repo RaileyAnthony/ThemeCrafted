@@ -20,15 +20,16 @@ const Orders = () => {
     const sellerId = order.sellerId;
     const buyerId = order.buyerId;
     const id = sellerId + buyerId;
+    const currentUserId = currentUser._id;
+
+    const to = currentUserId === sellerId ? buyerId : sellerId;
 
     try {
       const res = await newRequest.get(`/conversations/single/${id}`);
       navigate(`/message/${res.data.id}`);
     } catch (err) {
-      if (err.response.status === 404) {
-        const res = await newRequest.post(`/conversations/`, {
-          to: currentUser.seller ? buyerId : sellerId,
-        });
+      if (err.response && err.response.status === 404) {
+        const res = await newRequest.post(`/conversations/`, { to });
         navigate(`/message/${res.data.id}`);
       }
     }
