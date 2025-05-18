@@ -4,8 +4,8 @@ import createError from "../utils/createError.js";
 export const createGig = async (req, res, next) => {
   try {
     const newGig = new Gig({
-      userId: req.userId,
       ...req.body,
+      userId: req.userId,
     });
 
     const savedGig = await newGig.save();
@@ -74,7 +74,7 @@ export const updateGig = async (req, res, next) => {
       { $set: req.body },
       { new: true }
     );
-    
+
     res.status(200).send(updatedGig);
   } catch (err) {
     next(err);

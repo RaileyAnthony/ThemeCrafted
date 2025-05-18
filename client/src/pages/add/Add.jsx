@@ -225,9 +225,12 @@ const Add = () => {
     setLoading(true);
 
     if (isEditing && gigId) {
+      // For edit, send the whole state (may include userId)
       updateMutation.mutate({ id: gigId, gig: state });
     } else {
-      createMutation.mutate(state);
+      // For create, NEVER send userId
+      const { userId, ...gigData } = state;
+      createMutation.mutate(gigData);
     }
   };
 
