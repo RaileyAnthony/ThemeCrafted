@@ -87,7 +87,7 @@ const Navbar = () => {
             {currentUser ? (
               <div className="user" onClick={() => setOpen(!open)}>
                 <img
-                  src={currentUser.img || "/src/assets/noavatar.jpg"}
+                  src={currentUser.img || "/noavatar.jpg"}
                   alt="Profile picture"
                 />
                 <span>{currentUser?.username}</span>
@@ -137,7 +137,7 @@ const Navbar = () => {
           {currentUser && (
             <div className="mobile-profile">
               <img
-                src={currentUser.img || "/src/assets/noavatar.jpg"}
+                src={currentUser.img || "/noavatar.jpg"}
                 alt="Profile picture"
               />
               <span>{currentUser?.username}</span>
