@@ -27,7 +27,6 @@ const connect = async () => {
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
       "https://themecrafted-frontend.onrender.com",
     ],
     credentials: true,

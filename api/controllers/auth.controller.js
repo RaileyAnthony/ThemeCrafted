@@ -32,7 +32,8 @@ export const login = async (req, res, next) => {
         id: user._id,
         isSeller: user.isSeller,
       },
-      process.env.JWT_KEY
+      process.env.JWT_KEY,
+      { expiresIn: "7d" }
     );
 
     const { password, ...info } = user._doc;
@@ -40,7 +41,7 @@ export const login = async (req, res, next) => {
       .cookie("accessToken", token, {
         httpOnly: true,
         secure: true,
-        sameSite: "None",
+        sameSite: "none",
         domain: ".onrender.com",
       })
       .status(200)
