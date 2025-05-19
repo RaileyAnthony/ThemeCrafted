@@ -42,7 +42,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const response = await newRequest.post("/auth/login", credentials);
-    localStorage.setItem("accessToken", response.data.token);
     localStorage.setItem("currentUser", JSON.stringify(response.data));
     setCurrentUser(response.data);
     return response.data;
@@ -51,7 +50,6 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await newRequest.post("/auth/logout");
-      localStorage.setItem("accessToken", null);
       localStorage.setItem("currentUser", null);
       setCurrentUser(null);
     } catch (error) {
