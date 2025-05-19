@@ -47,7 +47,7 @@ function App() {
     const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
     const hideFooterRoutes = ["/login", "/register"];
-    const shouldHideFooter = hideNavbarRoutes.includes(location.pathname);
+    const shouldHideFooter = hideFooterRoutes.includes(location.pathname);
 
     return (
       <div className="app">
