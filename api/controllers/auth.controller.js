@@ -56,23 +56,7 @@ export const logout = async (req, res) => {
     .clearCookie("accessToken", {
       sameSite: "none",
       secure: true,
-      domain: ".onrender.com",
     })
     .status(200)
     .send("User has been logged out.");
-};
-
-export const verify = async (req, res, next) => {
-  try {
-    // If verifyToken runs first, req.userId is available
-    if (!req.userId) return next(createError(401, "Not authenticated"));
-
-    const user = await User.findById(req.userId);
-    if (!user) return next(createError(404, "User not found"));
-
-    const { password, ...info } = user._doc;
-    res.status(200).send(info);
-  } catch (err) {
-    next(err);
-  }
 };

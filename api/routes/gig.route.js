@@ -4,7 +4,7 @@ import {
   deleteGig,
   getGig,
   getGigs,
-  updateGig, // ADD THIS IMPORT
+  updateGig,
 } from "../controllers/gig.controller.js";
 import { verifyToken } from "../middleware/jwt.js";
 
