@@ -29,7 +29,10 @@ const Orders = () => {
       navigate(`/message/${res.data.id}`);
     } catch (err) {
       if (err.response && err.response.status === 404) {
-        const res = await newRequest.post(`/conversations/`, { to });
+        const res = await newRequest.post(`/conversations/`, {
+          to,
+          gigId: order.gigId,
+        });
         navigate(`/message/${res.data.id}`);
       }
     }
