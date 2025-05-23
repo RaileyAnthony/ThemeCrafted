@@ -14,7 +14,6 @@ const Hero = () => {
     // Update URL without triggering a full page navigation
     navigate(`/gigs?search=${input}`, { replace: true });
     // Force refetch data with the new search parameter
-    refetch();
   };
 
   return (
@@ -49,7 +48,7 @@ const Hero = () => {
                 placeholder="Search..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
+                onKeyPress={(e) => e.key === "Enter" && handleSubmit()}
               />
               {/* <button onClick={handleSubmit}>Search</button> */}
             </div>
