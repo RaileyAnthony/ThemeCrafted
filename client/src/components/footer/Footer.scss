@@ -41,12 +41,12 @@
         display: flex;
         align-items: center;
         gap: 20px;
-  
+
         .logoImg {
           width: 40px;
           height: auto;
         }
-  
+
         .logoText {
           font-family: LogoFont, sans-serif;
           color: white !important;
@@ -54,7 +54,7 @@
       }
 
       p {
-        color: rgba(255, 255, 255, 80%)  !important;
+        color: rgba(255, 255, 255, 80%) !important;
       }
     }
 
@@ -69,8 +69,10 @@
         flex-direction: column;
         width: 100%;
       }
-      .pages, .resources{
-        color: rgba(255, 255, 255, 80%)  !important;
+      .pages,
+      .resources,
+      .socials {
+        color: rgba(255, 255, 255, 80%) !important;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -81,9 +83,7 @@
         @media (max-width: 768px) {
           gap: 10px;
         }
-
       }
-
     }
   }
 }

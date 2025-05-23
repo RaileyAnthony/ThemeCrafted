@@ -51,7 +51,27 @@ const Footer = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Github Repository
+              Github
+            </a>
+          </div>
+
+          <div className="socials">
+            <h4>Socials</h4>
+            <a
+              className="link"
+              href="https://www.instagram.com/theme.crafted/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram
+            </a>
+            <a
+              className="link"
+              href="https://www.facebook.com/profile.php?id=61576183454191"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Facebook
             </a>
           </div>
         </div>
