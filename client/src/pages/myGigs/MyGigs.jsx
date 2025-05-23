@@ -124,19 +124,19 @@ function MyGigs() {
                       {salesCounts[gig._id] !== undefined ? (
                         salesCounts[gig._id]
                       ) : (
-                        <Loader size="small" color="gray" />
+                        <Loader size="large" color="primary" />
                       )}
                     </td>
                     <td>
                       <button
-                        className="edit-btn"
+                        className="outline-btn edit"
                         onClick={() => handleEdit(gig)}
                       >
                         <Edit size={16} />
                         Edit
                       </button>
                       <button
-                        className="delete-btn"
+                        className="primary-btn delete"
                         onClick={() => handleDelete(gig._id)}
                       >
                         <Trash2 size={16} />
