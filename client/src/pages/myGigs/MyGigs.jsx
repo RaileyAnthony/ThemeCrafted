@@ -128,20 +128,22 @@ function MyGigs() {
                       )}
                     </td>
                     <td>
-                      <button
-                        className="outline-btn edit"
-                        onClick={() => handleEdit(gig)}
-                      >
-                        <Edit size={16} />
-                        Edit
-                      </button>
-                      <button
-                        className="primary-btn delete"
-                        onClick={() => handleDelete(gig._id)}
-                      >
-                        <Trash2 size={16} />
-                        Delete
-                      </button>
+                      <div className="buttons">
+                        <button
+                          className="outline-btn edit"
+                          onClick={() => handleEdit(gig)}
+                        >
+                          <Edit size={16} />
+                          Edit
+                        </button>
+                        <button
+                          className="primary-btn delete"
+                          onClick={() => handleDelete(gig._id)}
+                        >
+                          <Trash2 size={16} />
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
