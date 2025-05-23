@@ -1,6 +1,4 @@
-// Updated MyGigs.jsx with Loader component
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./MyGigs.scss";
 import getCurrentUser from "../../utils/getCurrentUser";
@@ -53,6 +51,30 @@ function MyGigs() {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
+  // --- SALES COUNTS ---
+  const [salesCounts, setSalesCounts] = useState({});
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      data.forEach((gig) => {
+        newRequest
+          .get(`/orders/sales/${gig._id}`)
+          .then((res) => {
+            setSalesCounts((prev) => ({
+              ...prev,
+              [gig._id]: res.data.sales,
+            }));
+          })
+          .catch(() => {
+            setSalesCounts((prev) => ({
+              ...prev,
+              [gig._id]: 0,
+            }));
+          });
+      });
+    }
+  }, [data]);
+
   return (
     <div className="my-gigs">
       {isLoading ? (
@@ -71,8 +93,6 @@ function MyGigs() {
               </Link>
             )}
           </div>
-
-          {/* Wrap the table in a div with the table-container class */}
           <div className="table-container">
             <table>
               <thead>
@@ -100,24 +120,28 @@ function MyGigs() {
                       </div>
                     </td>
                     <td>${gig.price}.00</td>
-                    <td>{gig.sales || 0}</td>
                     <td>
-                      <div className="buttons">
-                        <button
-                          className="outline-btn edit"
-                          onClick={() => handleEdit(gig)}
-                        >
-                          <Edit size={16} />
-                          Edit
-                        </button>
-                        <button
-                          className="primary-btn delete"
-                          onClick={() => handleDelete(gig._id)}
-                        >
-                          <Trash2 size={16} />
-                          Remove
-                        </button>
-                      </div>
+                      {salesCounts[gig._id] !== undefined ? (
+                        salesCounts[gig._id]
+                      ) : (
+                        <Loader size="small" color="gray" />
+                      )}
+                    </td>
+                    <td>
+                      <button
+                        className="edit-btn"
+                        onClick={() => handleEdit(gig)}
+                      >
+                        <Edit size={16} />
+                        Edit
+                      </button>
+                      <button
+                        className="delete-btn"
+                        onClick={() => handleDelete(gig._id)}
+                      >
+                        <Trash2 size={16} />
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -129,5 +153,4 @@ function MyGigs() {
     </div>
   );
 }
-
 export default MyGigs;

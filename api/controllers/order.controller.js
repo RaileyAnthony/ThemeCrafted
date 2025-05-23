@@ -63,3 +63,16 @@ export const confirm = async (req, res, next) => {
     next(err);
   }
 };
+
+// Get sales count for a gig (theme)
+export const getSalesCount = async (req, res, next) => {
+  try {
+    const count = await Order.countDocuments({
+      gigId: req.params.gigId,
+      isCompleted: true, // Only count completed orders!
+    });
+    res.status(200).send({ sales: count });
+  } catch (err) {
+    next(err);
+  }
+};
